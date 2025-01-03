@@ -1,0 +1,148 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgb(153, 189, 190);
+    /* Game background color */
+    display: flex;
+    justify-content: top;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+}
+
+#game-title {
+    margin-top: 20px;
+    text-align: center;
+    /* Center align the title */
+}
+
+#options {
+    margin-top: 20px;
+    text-align: center;
+    /* Center align the options */
+}
+
+#options h2 {
+    margin-bottom: 10px;
+}
+
+
+#options>div {
+    margin-bottom: 20px;
+}
+
+
+#new-game {
+    margin-top: 20px;
+    text-align: center;
+    /* Center align the new game button */
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#user-input {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#guess-history {
+    text-align: center;
+    margin-top: 0px;
+}
+
+
+.green {
+    color: blue;
+}
+
+.orange {
+    color: purple;
+}
+
+@keyframes blink {
+    0% {
+        color: purple;
+    }
+
+    50% {
+        color: transparent;
+    }
+
+    100% {
+        color: purple;
+    }
+}
+
+@keyframes blinkAnswer {
+    0% {
+        color: blue;
+    }
+
+    50% {
+        color: transparent;
+    }
+
+    100% {
+        color: blue;
+    }
+}
+
+@keyframes blinkOver {
+    0% {
+        color: red;
+    }
+
+    50% {
+        color: transparent;
+    }
+
+    100% {
+        color: red;
+    }
+}
+
+@keyframes blinkCongrats {
+    0% {
+        color: blue;
+    }
+
+    50% {
+        color: transparent;
+    }
+
+    100% {
+        color: green;
+    }
+}
+
+.blink-purple {
+    animation: blink 1s infinite;
+}
+
+.blink-blue {
+    animation: blinkAnswer 1s infinite;
+}
+
+.blink-red {
+    animation: blinkOver 1s infinite;
+}
+
+.blink-green {
+    animation: blinkCongrats 1s infinite;
+}
+
+
+footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+    background-color: rgb(153, 189, 190);
+    color: silver;
+    font-size: 14px;
+}

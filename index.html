@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CowBull</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <div id="container">
+        <h1 id="game-title"><span style="color: purple;">Cow</span><span style="color: blue;">Bull</span></h1>
+
+        <div id="options">
+            <div>
+                <td><b>Secret Type</b></td>
+                <input type="radio" id="non-repeatable-secret" name="secret-type" value="non-repeatable"
+                    onclick="toggleSecretType()" checked> <label for="non-repeatable-secret">Non-Repeatable</label>
+                <input type="radio" id="repeatable-secret" name="secret-type" value="repeatable"
+                    onclick="toggleSecretType()"> <label for="repeatable-secret">Repeatable</label>
+
+            </div>
+            <div>
+                <td><b>Play With</b></td>
+                <input type="radio" id="four-digits" name="game-length" value="4" onclick="toggleGameLength()" checked>
+                <label for="four-digits">4 Digits (12 Guesses)</label>
+                <input type="radio" id="five-digits" name="game-length" value="5" onclick="toggleGameLength()">
+                <label for="five-digits">5 Digits (18 Guesses)</label>
+            </div>
+        </div>
+<td>
+        <div id="new-game">
+            <button onclick="startNewGame()">New Game</button>
+        </div>
+
+        <div id="game-container">
+            <div id="user-input">
+                <label for="guess"><b>Enter your guess : </b></label>
+                <input type="text" id="guess" maxlength="5">
+                <p><button id="submit-button" onclick="checkGuess()">Submit Guess</button></p>
+                <div id="result"></div>
+                <div id="guess-history"></div>
+            </div>
+        </div>
+</td>
+        <script src="script.js"></script>
+</body>
+<footer>
+    <p>&copy;Vasanth</p>
+</footer>
+
+</html>
