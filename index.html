@@ -24,35 +24,45 @@
                 <aside class="left-panel" role="complementary">
                     <section id="options" aria-labelledby="options-heading">
                         <h2 id="options-heading" class="visually-hidden">Game Options</h2>
+                        
+                        <!-- Daily Number Option -->
                         <div class="checkbox-group standalone">
                             <input type="checkbox" id="number-of-day" onclick="toggleDailyNumber()">
                             <label for="number-of-day">Secret of The Day</label>
                             <span class="utc-note" aria-label="Resets at midnight UTC">(resets at 00:00 UTC)</span>
                         </div>
-                        <div class="option-group">
-                            <strong id="secret-type-label">A Secret that is </strong>
-                            <div class="radio-group" role="radiogroup" aria-labelledby="secret-type-label">
-                                <input type="radio" id="non-repeatable-secret" name="secret-type" value="non-repeatable"
-                                    onclick="toggleSecretType()" checked>
-                                <label for="non-repeatable-secret">Non-Repeating</label>
-                            </div>
-                            <div class="radio-group">
-                                <input type="radio" id="repeatable-secret" name="secret-type" value="repeatable"
-                                    onclick="toggleSecretType()">
-                                <label for="repeatable-secret">Repeating</label>
+
+                        <!-- Secret Type Section -->
+                        <div class="option-section">
+                            <h3 class="option-title">Secret Type</h3>
+                            <div class="radio-group-container">
+                                <div class="radio-group">
+                                    <input type="radio" id="non-repeatable-secret" name="secret-type" 
+                                           value="non-repeatable" onclick="toggleSecretType()" checked>
+                                    <label for="non-repeatable-secret">Non-Repeating</label>
+                                </div>
+                                <div class="radio-group">
+                                    <input type="radio" id="repeatable-secret" name="secret-type" 
+                                           value="repeatable" onclick="toggleSecretType()">
+                                    <label for="repeatable-secret">Repeating</label>
+                                </div>
                             </div>
                         </div>
-                        <div class="option-group">
-                            <strong id="digits-label">Digits</strong>
-                            <div class="radio-group" role="radiogroup" aria-labelledby="digits-label">
-                                <input type="radio" id="four-digits" name="game-length" value="4"
-                                    onclick="toggleGameLength()" checked>
-                                <label for="four-digits">4 Digits</label>
-                            </div>
-                            <div class="radio-group">
-                                <input type="radio" id="five-digits" name="game-length" value="5"
-                                    onclick="toggleGameLength()">
-                                <label for="five-digits">5 Digits</label>
+
+                        <!-- Play With Section -->
+                        <div class="option-section">
+                            <h3 class="option-title">Play With</h3>
+                            <div class="radio-group-container">
+                                <div class="radio-group">
+                                    <input type="radio" id="four-digits" name="game-length" 
+                                           value="4" onclick="toggleGameLength()" checked>
+                                    <label for="four-digits">4 Digits</label>
+                                </div>
+                                <div class="radio-group">
+                                    <input type="radio" id="five-digits" name="game-length" 
+                                           value="5" onclick="toggleGameLength()">
+                                    <label for="five-digits">5 Digits</label>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -97,7 +107,7 @@
                         <div class="keyboard-row">
                             <button class="key-btn wide-btn" data-action="backspace" aria-label="Backspace">⌫</button>
                             <button class="key-btn wide-btn" data-action="clear" aria-label="Clear input">Clear</button>
-                            <button class="key-btn wide-btn" data-action="enter" aria-label="Enter guess">Enter</button>
+                            <button class="key-btn wide-btn" data-action="enter" aria-label="Enter guess">Guess</button>
                         </div>
                     </div>
                 </aside>

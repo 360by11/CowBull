@@ -19,19 +19,31 @@ const placeholderHTML = `
     <div class="placeholder-text">
         Your guesses will appear here...
         <ul>
-            <li>Each guess will show Bulls (correct position) in <span style="color: blue">blue</span></li>
+            <li>Each guess will show Bulls (correct number, correct position) in <span style="color: blue">blue</span></li>
             <li>And Cows (correct number, wrong position) in <span style="color: purple">purple</span></li>
         </ul>
         <div class="example-section">
-            <p>Example: Secret code = 1234</p>
+            <p><u>Example:</u></p>
+            <p> 4 Digits - If Secret code is 1234</p>
             <div class="example-guess">
-                <span>Guess: 1<span style="color: blue">2</span>7<span style="color: purple">4</span></span>
+                <span>Guess: 5<span style="color: blue">2</span><span style="color: purple">4</span><span style="color: purple">1</span></span>
                 <span class="example-result">→ <span style="color: blue">1</span> Bull, <span style="color: purple">1</span> Cow</span>
             </div>
             <div class="example-explanation">
                 <div>• <span style="color: blue">2</span> is in correct position (<span style="color: blue">blue</span>)</div>
+                <div>• <span style="color: purple">1</span> and <span style="color: purple">4</span> exists but wrong position (<span style="color: purple">purple</span>)</div>
+                <div>• <span class="unmatched">5</span> is not in the Secret code</div>
+            </div>
+            <p> </p>
+            <p> 5 Digits - If Secret code is 12345</p>
+            <div class="example-guess">
+                <span>Guess: 6<span style="color: blue">2</span><span style="color: purple">4</span>7<span style="color: blue">5</span></span>
+                <span class="example-result">→ <span style="color: blue">2</span> Bull, <span style="color: purple">1</span> Cow</span>
+            </div>
+            <div class="example-explanation">
+                <div>• <span style="color: blue">2</span> and <span style="color: blue">5</span> are in correct position</div>
                 <div>• <span style="color: purple">4</span> exists but wrong position (<span style="color: purple">purple</span>)</div>
-                <div>• <span class="unmatched">1</span> and <span class="unmatched">7</span> are not in code</div>
+                <div>• <span class="unmatched">6</span> and <span class="unmatched">7</span> are not in the Secret code</div>
             </div>
            
         </div>
@@ -206,8 +218,26 @@ function checkGuess() {
         document.getElementById('result').innerHTML = gameOverMessage;
         scrollToResult();
     } else {
-        // Update display for next guess
-        updateCurrentGuessDisplay();
+        // Show latest guess and remaining attempts
+        const remainingAttempts = maxAttempts - attempts;
+        const attemptsText = remainingAttempts === 1 ? 'attempt' : 'attempts';
+        const resultHTML = `
+            <div class="result-container">
+                <div class="guess-content">
+                    <span class="guess-number">${attempts}</span>
+                    <span class="guess-value">${guess}</span>
+                    <span>→</span>
+                    <div class="guess-result">
+                        <span>Bulls: <span class="green">${bulls}</span></span>
+                        <span>Cows: <span class="orange">${cows}</span></span>
+                    </div>
+                </div>
+                <div class="attempts-info">
+                    ${remainingAttempts} ${attemptsText} remaining
+                </div>
+            </div>
+        `;
+        document.getElementById('result').innerHTML = resultHTML;
         scrollToKeyboard();
     }
 }
@@ -287,22 +317,31 @@ function clearInput() {
 }
 
 function updateCurrentGuessDisplay() {
+    const remainingAttempts = maxAttempts - attempts;
+    const attemptsText = remainingAttempts === 1 ? 'attempt' : 'attempts';
+    
     if (currentGuess === '') {
-        // Show remaining attempts in the placeholder
-        const remainingAttempts = maxAttempts - attempts;
-        const attemptsText = remainingAttempts === 1 ? 'attempt' : 'attempts';
-        document.getElementById('result').setAttribute('data-placeholder', 
-            `${remainingAttempts} ${attemptsText} left - Enter your guess`);
-        document.getElementById('result').innerHTML = '';
+        // Show only remaining attempts when no current guess
+        document.getElementById('result').innerHTML = `
+            <div class="attempts-info">
+                ${remainingAttempts} ${attemptsText} remaining
+            </div>
+        `;
     } else {
+        // Show both current guess and remaining attempts
         const resultHTML = `
-            <div class="guess-content">
-                <span class="guess-number">${attempts + 1}</span>
-                <span class="guess-value">${currentGuess.padEnd(gameLength, '_')}</span>
-                <span>→</span>
-                <div class="guess-result">
-                    <span>Bulls: <span class="green">?</span></span>
-                    <span>Cows: <span class="orange">?</span></span>
+            <div class="result-container">
+                <div class="guess-content">
+                    <span class="guess-number">${attempts + 1}</span>
+                    <span class="guess-value">${currentGuess.padEnd(gameLength, '_')}</span>
+                    <span>→</span>
+                    <div class="guess-result">
+                        <span>Bulls: <span class="green">?</span></span>
+                        <span>Cows: <span class="orange">?</span></span>
+                    </div>
+                </div>
+                <div class="attempts-info">
+                    ${remainingAttempts} ${attemptsText} remaining
                 </div>
             </div>
         `;
