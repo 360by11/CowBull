@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CowBull</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -14,40 +14,84 @@
 
         <div id="options">
             <div>
-                <td><b>Secret Type</b></td>
+                <strong>Secret Type</strong>
                 <input type="radio" id="non-repeatable-secret" name="secret-type" value="non-repeatable"
                     onclick="toggleSecretType()" checked> <label for="non-repeatable-secret">Non-Repeatable</label>
                 <input type="radio" id="repeatable-secret" name="secret-type" value="repeatable"
                     onclick="toggleSecretType()"> <label for="repeatable-secret">Repeatable</label>
-
+                <input type="radio" id="number-of-day" name="secret-type" value="daily"
+                    onclick="toggleSecretType()"> <label for="number-of-day">Number of the Day</label>
+                <span class="utc-note">(Resets at 00:00 UTC)</span>
             </div>
             <div>
-                <td><b>Play With</b></td>
+                <strong>Play With</strong>
                 <input type="radio" id="four-digits" name="game-length" value="4" onclick="toggleGameLength()" checked>
                 <label for="four-digits">4 Digits (12 Guesses)</label>
                 <input type="radio" id="five-digits" name="game-length" value="5" onclick="toggleGameLength()">
                 <label for="five-digits">5 Digits (18 Guesses)</label>
             </div>
         </div>
-<td>
-        <div id="new-game">
-            <button onclick="startNewGame()">New Game</button>
-        </div>
 
         <div id="game-container">
-            <div id="user-input">
-                <label for="guess"><b>Enter your guess : </b></label>
-                <input type="text" id="guess" maxlength="5">
-                <p><button id="submit-button" onclick="checkGuess()">Submit Guess</button></p>
-                <div id="result"></div>
-                <div id="guess-history"></div>
+            <div class="split-container">
+                <!-- Left side: Guess History -->
+                <div class="left-panel">
+                    <div id="guess-history">
+                        <h3>Guess History</h3>
+                        <div class="placeholder-text">
+                            Your guesses will appear here...
+                            <ul>
+                                <li>Each guess will show Bulls (correct position) in <span style="color: blue;">blue</span></li>
+                                <li>And Cows (correct number, wrong position) in <span style="color: purple;">purple</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right side: All Game Controls -->
+                <div class="right-panel">
+                    <div id="new-game">
+                        <button onclick="startNewGame()">New Game</button>
+                    </div>
+
+                    <div id="user-input">
+                        <label for="guess"><strong>Enter your guess : </strong></label>
+                        <input type="text" id="guess" maxlength="5">
+                        <p><button id="submit-button" onclick="checkGuess()">Submit Guess</button></p>
+                    </div>
+
+                    <div id="result"></div>
+
+                    <div id="virtual-keyboard">
+                        <div class="keyboard-row">
+                            <button class="key-btn" onclick="appendNumber('1')">1</button>
+                            <button class="key-btn" onclick="appendNumber('2')">2</button>
+                            <button class="key-btn" onclick="appendNumber('3')">3</button>
+                            <button class="key-btn" onclick="appendNumber('4')">4</button>
+                            <button class="key-btn" onclick="appendNumber('5')">5</button>
+                        </div>
+                        <div class="keyboard-row">
+                            <button class="key-btn" onclick="appendNumber('6')">6</button>
+                            <button class="key-btn" onclick="appendNumber('7')">7</button>
+                            <button class="key-btn" onclick="appendNumber('8')">8</button>
+                            <button class="key-btn" onclick="appendNumber('9')">9</button>
+                            <button class="key-btn" onclick="appendNumber('0')">0</button>
+                        </div>
+                        <div class="keyboard-row">
+                            <button class="key-btn wide-btn" onclick="backspace()">⌫</button>
+                            <button class="key-btn wide-btn" onclick="clearInput()">Clear</button>
+                            <button class="key-btn wide-btn" onclick="checkGuess()">Enter</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-</td>
-        <script src="script.js"></script>
+
+        <footer>
+            <p>&copy;Vasanth</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
 </body>
-<footer>
-    <p>&copy;Vasanth</p>
-</footer>
 
 </html>
