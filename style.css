@@ -187,7 +187,8 @@ label {
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 0;
+    min-height: 400px;
+    max-height: 400px;
     padding: 20px;
     background-color: rgb(163, 199, 200);
     border-radius: 12px;
@@ -195,6 +196,7 @@ label {
     box-sizing: border-box;
     max-width: 100%;
     margin: -20px auto 10px;
+    overflow-y: auto;
 }
 
 #guess-history h3 {
@@ -208,18 +210,19 @@ label {
     width: 100%;
     max-width: 100%;
     text-align: center;
-    height: 60px;
+    height: 100px;
     margin: 10px auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     font-family: monospace;
-    font-size: 1.1em;
+    font-size: 1.2em;
     letter-spacing: 2px;
-    padding: 8px 15px;
-    background-color: rgb(153, 189, 190);
+    padding: 15px;
+    background-color: rgb(163, 199, 200);
     border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Ensure the result section is visible even when empty */
@@ -233,12 +236,12 @@ label {
 }
 
 #result:empty::before {
-    content: "Enter your first guess";
-    font-size: 1.1em;
-    color: #333;
+    content: attr(data-placeholder);
+    font-size: 1.4em;
+    color: #666;
+    letter-spacing: 4px;
 }
 
-/* Remove the after pseudo-element */
 #result:empty::after {
     content: none;
 }
@@ -265,8 +268,9 @@ label {
 
 #result .guess-value {
     font-family: monospace;
-    font-size: 1.1em;
-    letter-spacing: 2px;
+    font-size: 1.4em;
+    letter-spacing: 4px;
+    font-weight: bold;
 }
 
 #result .guess-result {
@@ -306,8 +310,9 @@ label {
 /* Mobile adjustments */
 @media (max-width: 768px) {
     #result {
-        height: 55px;
+        height: 70px;
         font-size: 1em;
+        padding: 10px 15px;
     }
 
     #result:empty::after {
@@ -389,11 +394,14 @@ footer {
 
 /* Guess history placeholder */
 .placeholder-text {
+    flex: 1;
     color: #333;
     font-style: italic;
     padding: 20px;
     text-align: left;
     line-height: 1.6;
+    min-height: 320px;
+    overflow-y: auto;
 }
 
 .placeholder-text ul {
@@ -491,8 +499,8 @@ footer {
 
     #guess-history {
         padding: 15px;
-        min-height: 150px;
-        max-height: 30vh;
+        min-height: 250px;
+        max-height: 350px;
     }
 
     /* Input and keyboard adjustments */
@@ -732,7 +740,6 @@ footer {
 /* Button group styling */
 .button-group {
     display: flex;
-    gap: 10px;
     justify-content: center;
     margin: 10px 0;
     width: 100%;
@@ -747,6 +754,7 @@ footer {
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.3s;
+    min-width: 120px;  /* Ensure consistent button width */
 }
 
 #new-game-button:hover {
@@ -761,8 +769,8 @@ footer {
 /* History content wrapper */
 .history-content {
     flex: 1;
+    min-height: 320px;
     overflow-y: auto;
-    min-height: 0;
     padding-right: 5px;
     display: flex;
     flex-direction: column;
@@ -940,4 +948,17 @@ input[type="checkbox"] {
     font-size: 1.1em;
     margin-top: 5px;
     letter-spacing: 1px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    #guess-history {
+        min-height: 350px;
+        max-height: 350px;
+    }
+
+    .placeholder-text,
+    .history-content {
+        min-height: 270px;
+    }
 }

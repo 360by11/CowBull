@@ -12,6 +12,7 @@ let guessResultEnd = null;
 let isNumberOfDay = false;
 let lastCheckedDate;
 let dailyMode = 'non-repeatable'; // Can be 'non-repeatable' or 'repeatable'
+let currentGuess = '';
 
 const placeholderHTML = `
     <h3>Guess History</h3>
@@ -44,10 +45,10 @@ function startNewGame() {
     end = false;
     guessResult = null;
     guessResultEnd = null;
+    currentGuess = '';
 
-    // Clear input and results
-    document.getElementById('guess').value = '';
-    document.getElementById('result').innerHTML = '';
+    // Clear results and show initial state
+    document.getElementById('result').innerHTML = '';  // This will show the empty state with underscores
     document.getElementById('guess-history').innerHTML = placeholderHTML;
 
     // Generate new secret code based on current settings
@@ -65,6 +66,8 @@ function startNewGame() {
         }
     }
 
+    // Update the result display with empty state
+    updateCurrentGuessDisplay();
     console.log('Secret Code:', secretCode);
 }
 
@@ -131,12 +134,29 @@ function toggleGameLength() {
         maxAttempts = maxAttemptsFive;
     }
     
+    // Update the current display before starting new game
+    currentGuess = '';
+    updateCurrentGuessDisplay();
+    
     // Restart the game with the new settings
     startNewGame();
 }
 
 function checkGuess() {
-    const guess = document.getElementById('guess').value;
+    const guess = currentGuess;
+    
+    // Add validation for empty guess
+    if (!guess) {
+        alert('Please enter a guess first.');
+        return;
+    }
+
+    // Check if maximum attempts reached
+    if (attempts >= maxAttempts) {
+        alert('You have reached the maximum number of attempts.');
+        return;
+    }
+
     const validLength = (guess.length === gameLength);
     const validDigits = (!isNaN(guess));
     const validGuess = (repeatableSecret || isNonRepeating(guess));
@@ -145,7 +165,8 @@ function checkGuess() {
     const isDuplicate = guesses.some(g => g.guess === guess);
     if (isDuplicate) {
         alert('You have already tried this number. Try a different one!');
-        document.getElementById('guess').value = '';  // Clear on duplicate
+        currentGuess = '';  // Clear current guess
+        updateCurrentGuessDisplay();
         return;
     }
 
@@ -153,10 +174,7 @@ function checkGuess() {
         alert('Please enter a valid ' + gameLength + '-digit number' + (repeatableSecret ? '' : ' with non-repeating digits.'));
         return;
     }
-    if (attempts >= maxAttempts) {
-        alert('You have reached the maximum number of attempts.');
-        return;
-    }
+
     let bulls = 0;
     let cows = 0;
     for (let i = 0; i < guess.length; i++) {
@@ -166,26 +184,14 @@ function checkGuess() {
             cows++;
         }
     }
+
+    // Increment attempts before pushing to guesses array
     attempts++;
     guesses.push({ guess: guess, bulls: bulls, cows: cows });
     updateGuessHistory();
 
-    // Clear input after successful guess
-    document.getElementById('guess').value = '';
-
-    // Update result section with latest guess in same format as history
-    const resultHTML = `
-        <div class="guess-content">
-            <span class="guess-number">${attempts}</span>
-            <span class="guess-value">${guess}</span>
-            <span>→</span>
-            <div class="guess-result">
-                <span>Bulls: <span class="green">${bulls}</span></span>
-                <span>Cows: <span class="orange">${cows}</span></span>
-            </div>
-        </div>
-    `;
-    document.getElementById('result').innerHTML = resultHTML;
+    // Clear currentGuess after successful guess
+    currentGuess = '';
 
     // Game over conditions
     if (bulls === secretCode.length) {
@@ -199,6 +205,10 @@ function checkGuess() {
         const gameOverMessage = '<span class="blink-red">Game Over! </span><span class="blink-purple">You have used all attempts. The secret code was </span><span class="blink-blue">' + secretCode + '</span>';
         document.getElementById('result').innerHTML = gameOverMessage;
         scrollToResult();
+    } else {
+        // Update display for next guess
+        updateCurrentGuessDisplay();
+        scrollToKeyboard();
     }
 }
 
@@ -257,20 +267,47 @@ function updateGuessHistory() {
 }
 
 function appendNumber(num) {
-    const guessInput = document.getElementById('guess');
-    if (guessInput.value.length < guessInput.maxLength) {
-        guessInput.value += num;
+    if (currentGuess.length < gameLength) {
+        currentGuess += num;
+        updateCurrentGuessDisplay();
+        scrollToKeyboard();
     }
 }
 
 function backspace() {
-    const guessInput = document.getElementById('guess');
-    guessInput.value = guessInput.value.slice(0, -1);
+    currentGuess = currentGuess.slice(0, -1);
+    updateCurrentGuessDisplay();
+    scrollToKeyboard();
 }
 
 function clearInput() {
-    const guessInput = document.getElementById('guess');
-    guessInput.value = '';
+    currentGuess = '';
+    updateCurrentGuessDisplay();
+    scrollToKeyboard();
+}
+
+function updateCurrentGuessDisplay() {
+    if (currentGuess === '') {
+        // Show remaining attempts in the placeholder
+        const remainingAttempts = maxAttempts - attempts;
+        const attemptsText = remainingAttempts === 1 ? 'attempt' : 'attempts';
+        document.getElementById('result').setAttribute('data-placeholder', 
+            `${remainingAttempts} ${attemptsText} left - Enter your guess`);
+        document.getElementById('result').innerHTML = '';
+    } else {
+        const resultHTML = `
+            <div class="guess-content">
+                <span class="guess-number">${attempts + 1}</span>
+                <span class="guess-value">${currentGuess.padEnd(gameLength, '_')}</span>
+                <span>→</span>
+                <div class="guess-result">
+                    <span>Bulls: <span class="green">?</span></span>
+                    <span>Cows: <span class="orange">?</span></span>
+                </div>
+            </div>
+        `;
+        document.getElementById('result').innerHTML = resultHTML;
+    }
 }
 
 // Add keyboard support
@@ -280,8 +317,9 @@ document.addEventListener('keydown', function(event) {
     } else if (event.key === 'Backspace') {
         backspace();
     } else if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission if any
         checkGuess();
-    } else if (event.key === 'Delete') {  // Add Delete key support
+    } else if (event.key === 'Delete') {
         clearInput();
     }
 });
@@ -360,7 +398,7 @@ function updateUTCTime() {
     document.getElementById('utc-time').textContent = formattedTime;
 }
 
-// Update the window.onload function to refresh time every second
+// Update the window.onload function with a longer delay
 window.onload = function () {
     // Initialize the game
     lastCheckedDate = new Date().getUTCDate();
@@ -370,10 +408,13 @@ window.onload = function () {
     updateUTCTime();
     
     // Update UTC time every second
-    setInterval(updateUTCTime, 1000);  // Changed from 20000 to 1000
+    setInterval(updateUTCTime, 1000);
     
     // Check for day change every minute
     setInterval(checkDayChange, 60000);
+
+    // Scroll to keyboard after 10 seconds to allow user to read instructions
+    setTimeout(scrollToKeyboard, 10000);  // Changed from 1000 to 10000
 };
 
 function confirmNewGame() {
@@ -420,3 +461,31 @@ function scrollToResult() {
     const resultElement = document.getElementById('result');
     resultElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
+
+// Add this function to scroll to keyboard
+function scrollToKeyboard() {
+    const keyboardElement = document.getElementById('virtual-keyboard');
+    keyboardElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+// Update the keyboard event handling
+document.getElementById('virtual-keyboard').addEventListener('click', (e) => {
+    const button = e.target.closest('.key-btn');
+    if (!button) return;
+
+    if (button.dataset.key) {
+        appendNumber(button.dataset.key);
+    } else if (button.dataset.action) {
+        switch (button.dataset.action) {
+            case 'backspace':
+                backspace();
+                break;
+            case 'clear':
+                clearInput();
+                break;
+            case 'enter':
+                checkGuess();
+                break;
+        }
+    }
+});
