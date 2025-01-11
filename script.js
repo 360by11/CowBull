@@ -238,7 +238,7 @@ function checkGuess() {
             </div>
         `;
         document.getElementById('result').innerHTML = resultHTML;
-        scrollToKeyboard();
+        keepKeyboardVisible();
     }
 }
 
@@ -300,20 +300,20 @@ function appendNumber(num) {
     if (currentGuess.length < gameLength) {
         currentGuess += num;
         updateCurrentGuessDisplay();
-        scrollToKeyboard();
+        keepKeyboardVisible();
     }
 }
 
 function backspace() {
     currentGuess = currentGuess.slice(0, -1);
     updateCurrentGuessDisplay();
-    scrollToKeyboard();
+    keepKeyboardVisible();
 }
 
 function clearInput() {
     currentGuess = '';
     updateCurrentGuessDisplay();
-    scrollToKeyboard();
+    keepKeyboardVisible();
 }
 
 function updateCurrentGuessDisplay() {
@@ -492,8 +492,8 @@ window.onload = function () {
     // Check for day change every minute
     setInterval(checkDayChange, 60000);
 
-    // Scroll to keyboard after 10 seconds to allow user to read instructions
-    setTimeout(scrollToKeyboard, 10000);  // Changed from 1000 to 10000
+    // Initial keyboard positioning
+    keepKeyboardVisible();
 };
 
 function confirmNewGame() {
@@ -537,12 +537,15 @@ function toggleDailyNumber() {
 
 // Add this function to handle scrolling to result
 function scrollToResult() {
-    const resultElement = document.getElementById('result');
-    resultElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Only scroll on game over
+    if (end) {
+        const resultElement = document.getElementById('result');
+        resultElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 }
 
-// Add this function to scroll to keyboard
-function scrollToKeyboard() {
+// Add new function to keep keyboard in view
+function keepKeyboardVisible() {
     const keyboardElement = document.getElementById('virtual-keyboard');
-    keyboardElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    keyboardElement.scrollIntoView({ behavior: 'instant', block: 'end' });
 }

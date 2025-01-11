@@ -30,6 +30,7 @@ body {
     box-sizing: border-box;
     overflow: visible;
     min-height: 100vh;
+    padding-bottom: calc(12px + 180px);
 }
 
 /* Game container */
@@ -403,12 +404,15 @@ label {
 
 /* Virtual keyboard */
 #virtual-keyboard {
+    position: sticky;
+    bottom: 0;
     width: 100%;
     max-width: 100%;
     padding: 12px;
     background-color: rgb(163, 199, 200);
-    border-radius: 12px;
+    border-radius: 12px 12px 0 0;
     margin-top: 10px;
+    z-index: 100;
 }
 
 .keyboard-row {
@@ -483,6 +487,9 @@ footer {
     letter-spacing: 1px;
     background-color: transparent;
     border-radius: 8px;
+    position: relative;
+    z-index: 101;
+    margin-top: 10px;
 }
 
 /* Mobile adjustments for footer */
