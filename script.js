@@ -228,8 +228,12 @@ function updateGuessHistory() {
     if (guesses.length === 0) {
         // Show placeholder when there are no guesses
         historyDiv.innerHTML = placeholderHTML;
+        historyDiv.classList.remove('scrollable');  // Remove scrollable class
         return;
     }
+
+    // Add scrollable class when game starts
+    historyDiv.classList.add('scrollable');
 
     historyDiv.innerHTML = `
         <h3>Guess History</h3>
