@@ -537,15 +537,13 @@ function toggleDailyNumber() {
 
 // Add this function to handle scrolling to result
 function scrollToResult() {
-    // Only scroll on game over
     if (end) {
         const resultElement = document.getElementById('result');
-        resultElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        resultElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 }
 
 // Add new function to keep keyboard in view
 function keepKeyboardVisible() {
-    const keyboardElement = document.getElementById('virtual-keyboard');
-    keyboardElement.scrollIntoView({ behavior: 'instant', block: 'end' });
+    // Do nothing - keyboard is now fixed
 }
