@@ -279,53 +279,52 @@ label {
 }
 
 .example-section {
-    margin: 0 auto;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.2);
+    margin: 15px 0;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     width: 100%;
     box-sizing: border-box;
 }
 
 .example-section p {
-    margin: 0 0 12px 0;
-    font-weight: normal;
-    font-size: 1em;
-    text-align: center;
+    margin: 0 0 12px 15px;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-align: left;
+    color: #333;
 }
 
 .example-guess {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     padding: 10px 15px;
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 6px;
-    margin: 12px auto;
+    margin: 8px 0;
     font-family: monospace;
     font-size: 1.2em;
     font-weight: normal;
-    width: 100%;
-    max-width: 500px;
+    margin-left: 30px;
+    width: calc(100% - 45px);
     gap: 20px;
+}
+
+.example-result {
+    margin-left: auto;
+    padding-right: 15px;
 }
 
 .example-explanation {
     font-size: 1em;
     line-height: 1.8;
-    margin: 15px auto;
+    margin: 15px 0;
     color: #444;
     font-family: monospace;
     font-weight: normal;
-    width: 100%;
-    max-width: 500px;
-    text-align: center;
-}
-
-.example-explanation div {
-    margin-bottom: 8px;
-    font-weight: normal;
-    letter-spacing: 1px;
+    padding-left: 30px;
+    padding-right: 15px;
 }
 
 /* Mobile adjustments */
@@ -335,18 +334,27 @@ label {
     }
 
     .example-section {
-        padding: 15px;
+        padding: 12px;
+        margin: 12px 0;
+    }
+
+    .example-section p {
+        margin: 0 0 12px 10px;
     }
 
     .example-guess {
-        font-size: 1.1em;
+        margin-left: 20px;
+        width: calc(100% - 35px);
         padding: 8px 12px;
-        gap: 15px;
     }
 
     .example-explanation {
-        font-size: 0.95em;
-        line-height: 1.6;
+        padding-left: 20px;
+        padding-right: 12px;
+    }
+
+    .example-result {
+        padding-right: 12px;
     }
 }
 
@@ -1349,5 +1357,105 @@ input[type="checkbox"] {
     .placeholder-text,
     .history-content {
         min-height: 570px;
+    }
+}
+
+/* Common background color for all sections */
+#options,
+#game-examples,
+#guess-history,
+#result {
+    background-color: rgb(163, 199, 200);
+    border-radius: 12px;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Common inner section styling */
+.option-section,
+.example-section,
+.example-guess,
+.guess-content {
+    background-color: rgba(255, 255, 255, 0.1);  /* Same background opacity for all inner divs */
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Remove any additional background colors */
+.example-guess {
+    background-color: rgba(255, 255, 255, 0.1);  /* Match other sections */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 6px;
+    margin: 8px 0;
+    font-family: monospace;
+    font-size: 1.2em;
+    font-weight: normal;
+    margin-left: 30px;
+    width: calc(100% - 45px);
+    gap: 20px;
+}
+
+/* Result content styling */
+#result .guess-content {
+    background-color: rgba(255, 255, 255, 0.1);  /* Match other sections */
+    padding: 8px 15px;
+    border-radius: 8px;
+    width: auto;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* History row styling */
+.history-row {
+    background-color: rgba(255, 255, 255, 0.1);  /* Match other sections */
+    border-radius: 6px;
+    padding: 8px 15px;
+    margin-bottom: 8px;
+}
+
+/* Common title styling */
+.option-title,
+.example-section p {
+    margin: 0 0 12px 15px;
+    font-weight: bold;
+    font-size: 1.1em;
+    text-align: left;
+    color: #333;
+}
+
+/* Common content container styling */
+.radio-group-container,
+.example-guess,
+.example-explanation {
+    padding-left: 30px;
+    width: calc(100% - 30px);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    #options,
+    #game-examples,
+    #guess-history,
+    #result {
+        padding: 15px;
+    }
+
+    .option-section,
+    .example-section {
+        padding: 12px;
+        margin: 12px 0;
+    }
+
+    .radio-group-container,
+    .example-guess,
+    .example-explanation {
+        padding-left: 20px;
+        width: calc(100% - 20px);
     }
 }
