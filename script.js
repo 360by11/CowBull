@@ -19,34 +19,10 @@ const placeholderHTML = `
     <div class="placeholder-text">
         Your guesses will appear here...
         <ul>
-            <li>Each guess will show Bulls (correct number, correct position) in <span style="color: blue">blue</span></li>
+            <li>Each guess will show Bulls (correct position) in <span style="color: blue">blue</span></li>
             <li>And Cows (correct number, wrong position) in <span style="color: purple">purple</span></li>
+            <li>The Color codes are disabled during the Game and only be revealed when the Game is over!!!</li>
         </ul>
-        <div class="example-section">
-            <p><u>Example:</u></p>
-            <p> 4 Digits - If Secret code is 1234</p>
-            <div class="example-guess">
-                <span>Guess: 5<span style="color: blue">2</span><span style="color: purple">4</span><span style="color: purple">1</span></span>
-                <span class="example-result">→ <span style="color: blue">1</span> Bull, <span style="color: purple">1</span> Cow</span>
-            </div>
-            <div class="example-explanation">
-                <div>• <span style="color: blue">2</span> is in correct position (<span style="color: blue">blue</span>)</div>
-                <div>• <span style="color: purple">1</span> and <span style="color: purple">4</span> exists but wrong position (<span style="color: purple">purple</span>)</div>
-                <div>• <span class="unmatched">5</span> is not in the Secret code</div>
-            </div>
-            <p> </p>
-            <p> 5 Digits - If Secret code is 12345</p>
-            <div class="example-guess">
-                <span>Guess: 6<span style="color: blue">2</span><span style="color: purple">4</span>7<span style="color: blue">5</span></span>
-                <span class="example-result">→ <span style="color: blue">2</span> Bull, <span style="color: purple">1</span> Cow</span>
-            </div>
-            <div class="example-explanation">
-                <div>• <span style="color: blue">2</span> and <span style="color: blue">5</span> are in correct position</div>
-                <div>• <span style="color: purple">4</span> exists but wrong position (<span style="color: purple">purple</span>)</div>
-                <div>• <span class="unmatched">6</span> and <span class="unmatched">7</span> are not in the Secret code</div>
-            </div>
-           
-        </div>
     </div>
 `;
 
