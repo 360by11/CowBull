@@ -1,9 +1,9 @@
 /* Base layout fixes */
 html, body {
-    height: 100%;
+    height: auto;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 body {
@@ -13,6 +13,7 @@ body {
     flex-direction: column;
     padding: 10px;
     box-sizing: border-box;
+    min-height: 100vh;
 }
 
 #container {
@@ -27,8 +28,8 @@ body {
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
-    overflow: hidden;
-    height: 100%;
+    overflow: visible;
+    min-height: 100vh;
 }
 
 /* Game container */
@@ -53,18 +54,30 @@ body {
     background-color: rgb(163, 199, 200);
     padding: 15px;
     border-radius: 12px;
-    margin-bottom: 15px;
+    margin-bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 #options div {
-    margin-bottom: 15px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#options div:first-child {
+    flex-direction: column;
 }
 
 #options strong {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     color: #333;
     font-size: 1.1em;
+    padding-top: 5px;
+    margin-left: 15px;
 }
 
 /* Radio buttons styling */
@@ -73,8 +86,10 @@ input[type="radio"] {
 }
 
 label {
-    margin-right: 20px;
+    margin-left: 5px;
     color: #444;
+    font-size: 0.95em;
+    transition: color 0.2s ease;
 }
 
 /* New game button */
@@ -96,10 +111,12 @@ label {
 /* Game input section */
 #user-input {
     width: 100%;
-    max-width: 400px;
+    max-width: 100%;
     text-align: center;
-    margin: 0;
-    padding-bottom: 5px;
+    margin: -10px auto 10px;
+    padding: 15px;
+    background-color: rgb(163, 199, 200);
+    border-radius: 12px;
 }
 
 #guess {
@@ -108,9 +125,10 @@ label {
     width: 150px;
     border: 2px solid rgb(133, 169, 170);
     border-radius: 8px;
-    margin: 10px;
+    margin: 10px auto;
     background-color: rgb(163, 199, 200);
     color: #333;
+    display: block;
 }
 
 #submit-button {
@@ -132,24 +150,36 @@ label {
 .split-container {
     flex: 1;
     display: flex;
-    gap: 20px;
-    min-height: 0;
-}
-
-.left-panel {
-    flex: 0 0 350px;
-    display: flex;
     flex-direction: column;
+    gap: 40px;
     min-height: 0;
+    align-items: center;
 }
 
-.right-panel {
+.left-panel, .right-panel {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    min-height: 0;
     gap: 10px;
+    padding: 10px;
+    background-color: rgba(163, 199, 200, 0.8);
+    border-radius: 12px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Media query for larger screens */
+@media (min-width: 768px) {
+    .split-container {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .left-panel, .right-panel {
+        flex: 0 0 50%;
+        max-width: 600px;
+    }
 }
 
 /* Guess history */
@@ -161,6 +191,10 @@ label {
     padding: 20px;
     background-color: rgb(163, 199, 200);
     border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 100%;
+    margin: -20px auto 10px;
 }
 
 #guess-history h3 {
@@ -172,10 +206,10 @@ label {
 /* Result section */
 #result {
     width: 100%;
-    max-width: 400px;
+    max-width: 100%;
     text-align: center;
     height: 60px;
-    margin: 5px auto;
+    margin: 10px auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -185,10 +219,10 @@ label {
     letter-spacing: 2px;
     padding: 8px 15px;
     background-color: rgb(153, 189, 190);
-    border-radius: 6px;
+    border-radius: 12px;
 }
 
-/* Empty result styling to match game over state */
+/* Ensure the result section is visible even when empty */
 #result:empty {
     display: flex;
     justify-content: center;
@@ -284,22 +318,25 @@ label {
 /* Virtual keyboard */
 #virtual-keyboard {
     width: 100%;
-    max-width: 400px;
+    max-width: 100%;
     padding: 12px;
     background-color: rgb(163, 199, 200);
     border-radius: 12px;
+    margin-top: 10px;
 }
 
 .keyboard-row {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     margin-bottom: 8px;
+    gap: 8px;
 }
 
 .key-btn {
-    width: 50px;
-    height: 50px;
-    margin: 0 5px;
+    flex: 1;
+    min-width: 40px;
+    height: 45px;
+    margin: 0;
     border: none;
     background-color: rgb(173, 209, 210);
     border-radius: 10px;
@@ -320,7 +357,7 @@ label {
 }
 
 .wide-btn {
-    width: 80px;
+    flex: 1.5;
 }
 
 /* Animation classes */
@@ -427,19 +464,17 @@ footer {
 
     /* Options section */
     #options {
-        padding: 12px;
-        margin-bottom: 12px;
+        padding: 8px;
+        margin-bottom: 8px;
     }
 
     #options div {
-        display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 5px;
     }
 
     label {
-        display: inline-block;
-        margin-bottom: 5px;
+        margin-right: 5px;
     }
 
     /* Split layout adjustments */
@@ -467,14 +502,13 @@ footer {
     }
 
     .key-btn {
-        width: 40px;
+        min-width: 35px;
         height: 40px;
-        font-size: 1.1em;
-        margin: 0 3px;
+        font-size: 1em;
     }
 
     .wide-btn {
-        width: 70px;
+        flex: 1.2;
     }
 
     /* History row adjustments */
@@ -493,6 +527,15 @@ footer {
     footer {
         padding: 2px 0;
         font-size: 0.85em;
+    }
+
+    #virtual-keyboard {
+        padding: 8px;
+    }
+
+    .keyboard-row {
+        gap: 5px;
+        margin-bottom: 5px;
     }
 }
 
@@ -627,7 +670,8 @@ footer {
     font-size: 0.85em;
     color: #555;
     font-style: italic;
-    margin-left: 8px;
+    margin-top: 5px;
+    display: block;
 }
 
 /* Update mobile styles for the note */
@@ -690,7 +734,8 @@ footer {
     display: flex;
     gap: 10px;
     justify-content: center;
-    margin-top: 10px;
+    margin: 10px 0;
+    width: 100%;
 }
 
 #new-game-button {
@@ -737,4 +782,162 @@ footer {
 .history-content::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
+}
+
+/* Header styling */
+#header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#game-title {
+    margin: 0 0 5px 0;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 2px;
+}
+
+#new-game-button-top {
+    background-color: #4a90e2;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#new-game-button-top:hover {
+    background-color: #357abd;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.option-group {
+    margin-bottom: 20px;
+    padding-top: 5px;
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    margin-left: 15px;
+}
+
+.radio-group.center-align {
+    justify-content: center;
+    margin-top: 10px;
+}
+
+/* Left panel adjustments */
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Section headings */
+h2, h3 {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Consistent width for all sections */
+#options,
+#user-input,
+#guess-history,
+#result,
+#virtual-keyboard {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Split container adjustments */
+.split-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    min-height: 0;
+    align-items: center;
+}
+
+/* Checkbox group styling */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    gap: 5px;
+}
+
+.checkbox-group .utc-note {
+    margin-left: 5px;
+    margin-top: 0;
+    display: inline;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.checkbox-group.standalone {
+    padding: 10px 0 15px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin-left: 15px;
+}
+
+.checkbox-group.standalone label {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Radio button and label styling */
+.radio-group input[type="radio"] {
+    margin-right: 8px;
+}
+
+.radio-group input[type="radio"]:checked + label {
+    color: blue;
+    font-weight: bold;
+}
+
+/* Checkbox styling */
+.checkbox-group input[type="checkbox"]:checked + label {
+    color: blue;
+    font-weight: bold;
+}
+
+/* UTC time display styling */
+.utc-time-display {
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    color: #333;
+    font-size: 1.1em;
+    margin-top: 5px;
+    letter-spacing: 1px;
 }

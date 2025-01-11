@@ -32,6 +32,7 @@ const placeholderHTML = `
                 <div>• <span style="color: purple">4</span> exists but wrong position (<span style="color: purple">purple</span>)</div>
                 <div>• <span class="unmatched">1</span> and <span class="unmatched">7</span> are not in code</div>
             </div>
+           
         </div>
     </div>
 `;
@@ -52,14 +53,16 @@ function startNewGame() {
     // Generate new secret code based on current settings
     if (isNumberOfDay) {
         const modeText = repeatableSecret ? "Repeatable" : "Non-Repeatable";
-        alert(`Loading ${modeText} Number of the Day (${gameLength} digits)...`);
+        alert(`Loading ${modeText} Secret of The Day (${gameLength} digits)...`);
         secretCode = generateDailyNumber(gameLength, repeatableSecret);
-    } else if (repeatableSecret) {
-        alert("Generating Repeatable " + gameLength + " digit secret...");
-        startGame(gameLength);
     } else {
-        alert("Generating Non-Repeatable " + gameLength + " digit secret...");
-        startGameWithNonRepeatableSecret(gameLength);
+        const modeText = repeatableSecret ? "Repeatable" : "Non-Repeatable";
+        alert(`Generating ${modeText} ${gameLength} digit secret...`);
+        if (repeatableSecret) {
+            startGame(gameLength);
+        } else {
+            startGameWithNonRepeatableSecret(gameLength);
+        }
     }
 
     console.log('Secret Code:', secretCode);
@@ -111,22 +114,15 @@ function shuffleArray(array) {
 
 function toggleSecretType() {
     const repeatable = document.getElementById('repeatable-secret');
-    const daily = document.getElementById('number-of-day');
-    
-    if (daily.checked) {
-        isNumberOfDay = true;
-        dailyMode = repeatableSecret ? 'repeatable' : 'non-repeatable';
-    } else {
-        isNumberOfDay = false;
-        dailyMode = 'none';
-    }
     repeatableSecret = repeatable.checked;
     
+    // Start a new game with current settings
     startNewGame();
 }
 
 function toggleGameLength() {
     const fourDigits = document.getElementById('four-digits');
+    
     if (fourDigits.checked) {
         gameLength = 4;
         maxAttempts = maxAttemptsFour;
@@ -134,6 +130,7 @@ function toggleGameLength() {
         gameLength = 5;
         maxAttempts = maxAttemptsFive;
     }
+    
     // Restart the game with the new settings
     startNewGame();
 }
@@ -195,11 +192,13 @@ function checkGuess() {
         end = true;
         updateGuessHistory();
         document.getElementById('result').innerHTML = '<span class="blink-green">Congratulations! You guessed the secret code!</span>';
+        scrollToResult();
     } else if (attempts >= maxAttempts) {
         end = true;
         updateGuessHistory();
         const gameOverMessage = '<span class="blink-red">Game Over! </span><span class="blink-purple">You have used all attempts. The secret code was </span><span class="blink-blue">' + secretCode + '</span>';
         document.getElementById('result').innerHTML = gameOverMessage;
+        scrollToResult();
     }
 }
 
@@ -345,10 +344,33 @@ function checkDayChange() {
     }
 }
 
+// Add this function to update UTC time
+function updateUTCTime() {
+    const now = new Date();
+    
+    // Format the date and time in 24-hour format
+    const date = now.toUTCString().split(' ').slice(0, 4).join(' '); // Get date part
+    const hours = String(now.getUTCHours()).padStart(2, '0');
+    const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(now.getUTCSeconds()).padStart(2, '0');
+    
+    // Combine date and time
+    const formattedTime = `${date} ${hours}:${minutes}:${seconds} UTC`;
+    
+    document.getElementById('utc-time').textContent = formattedTime;
+}
+
+// Update the window.onload function to refresh time every second
 window.onload = function () {
     // Initialize the game
     lastCheckedDate = new Date().getUTCDate();
     startNewGame();
+    
+    // Initial UTC time update
+    updateUTCTime();
+    
+    // Update UTC time every second
+    setInterval(updateUTCTime, 1000);  // Changed from 20000 to 1000
     
     // Check for day change every minute
     setInterval(checkDayChange, 60000);
@@ -369,4 +391,32 @@ function confirmNewGame() {
     } else {
         startNewGame();
     }
+}
+
+function updateResult(guess, bulls, cows) {
+    const resultHTML = `
+        <div class="guess-content">
+            <span class="guess-value">${guess}</span>
+            <span>→</span>
+            <div class="guess-result">
+                <span>Bulls: <span class="green">${bulls}</span></span>
+                <span>Cows: <span class="orange">${cows}</span></span>
+            </div>
+        </div>
+    `;
+    document.getElementById('result').innerHTML = resultHTML;
+}
+
+function toggleDailyNumber() {
+    const dailyCheckbox = document.getElementById('number-of-day');
+    isNumberOfDay = dailyCheckbox.checked;
+    
+    // Start a new game with current settings
+    startNewGame();
+}
+
+// Add this function to handle scrolling to result
+function scrollToResult() {
+    const resultElement = document.getElementById('result');
+    resultElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }

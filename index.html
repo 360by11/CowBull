@@ -9,84 +9,129 @@
 </head>
 
 <body>
-    <div id="container">
-        <h1 id="game-title"><span style="color: purple;">Cow</span><span style="color: blue;">Bull</span></h1>
-
-        <div id="options">
-            <div>
-                <strong>Secret Type</strong>
-                <input type="radio" id="non-repeatable-secret" name="secret-type" value="non-repeatable"
-                    onclick="toggleSecretType()" checked> <label for="non-repeatable-secret">Non-Repeatable</label>
-                <input type="radio" id="repeatable-secret" name="secret-type" value="repeatable"
-                    onclick="toggleSecretType()"> <label for="repeatable-secret">Repeatable</label>
-                <input type="radio" id="number-of-day" name="secret-type" value="daily"
-                    onclick="toggleSecretType()"> <label for="number-of-day">Number of the Day</label>
-                <span class="utc-note">(Resets at 00:00 UTC)</span>
-            </div>
-            <div>
-                <strong>Play With</strong>
-                <input type="radio" id="four-digits" name="game-length" value="4" onclick="toggleGameLength()" checked>
-                <label for="four-digits">4 Digits (12 Guesses)</label>
-                <input type="radio" id="five-digits" name="game-length" value="5" onclick="toggleGameLength()">
-                <label for="five-digits">5 Digits (18 Guesses)</label>
-            </div>
-        </div>
+    <div id="container" role="main">
+        <header id="header" role="banner">
+            <h1 id="game-title">
+                <span style="color: purple;">Cow</span><span style="color: blue;">Bull</span>
+            </h1>
+            <div id="utc-time" class="utc-time-display"></div>
+        </header>
 
         <div id="game-container">
             <div class="split-container">
-                <!-- Left side: Guess History -->
-                <div class="left-panel">
-                    <div id="guess-history">
-                        <h3>Guess History</h3>
+                <!-- Left side: Options, Game Controls, Guess History, and Result -->
+                <aside class="left-panel" role="complementary">
+                    <section id="options" aria-labelledby="options-heading">
+                        <h2 id="options-heading" class="visually-hidden">Game Options</h2>
+                        <div class="checkbox-group standalone">
+                            <input type="checkbox" id="number-of-day" onclick="toggleDailyNumber()">
+                            <label for="number-of-day">Secret of The Day</label>
+                            <span class="utc-note">(resets at 00:00 UTC)</span>
+                        </div>
+                        <div class="option-group">
+                            <strong>A Secret that is </strong>
+                            <div class="radio-group">
+                                <input type="radio" id="non-repeatable-secret" name="secret-type" value="non-repeatable"
+                                    onclick="toggleSecretType()" checked>
+                                <label for="non-repeatable-secret">Non-Repeating</label>
+                            </div>
+                            <div class="radio-group">
+                                <input type="radio" id="repeatable-secret" name="secret-type" value="repeatable"
+                                    onclick="toggleSecretType()">
+                                <label for="repeatable-secret">Repeating</label>
+                            </div>
+                        </div>
+                        <div class="option-group">
+                            <strong>Digits</strong>
+                            <div class="radio-group">
+                                <input type="radio" id="four-digits" name="game-length" value="4"
+                                    onclick="toggleGameLength()" checked>
+                                <label for="four-digits">4 Digits</label>
+                            </div>
+                            <div class="radio-group">
+                                <input type="radio" id="five-digits" name="game-length" value="5"
+                                    onclick="toggleGameLength()">
+                                <label for="five-digits">5 Digits</label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Guess History moved here -->
+                    <section id="guess-history" aria-labelledby="history-heading">
+                        <h2 id="history-heading">Guess History</h2>
                         <div class="placeholder-text">
                             Your guesses will appear here...
                             <ul>
-                                <li>Each guess will show Bulls (correct position) in <span style="color: blue;">blue</span></li>
-                                <li>And Cows (correct number, wrong position) in <span style="color: purple;">purple</span></li>
+                                <li>Each guess will show Bulls (correct position) in <span
+                                        style="color: blue;">blue</span></li>
+                                <li>And Cows (correct number, wrong position) in <span
+                                        style="color: purple;">purple</span></li>
                             </ul>
-                        </div>
-                    </div>
-                </div>
+                            <div class="example-section">
+                                <p>Example: Secret code = 1234</p>
+                                <div class="example-guess">
+                                    <span>Guess: 1<span style="color: blue">2</span>7<span
+                                            style="color: purple">4</span></span>
+                                    <span class="example-result">→ <span style="color: blue">1</span> Bull, <span
+                                            style="color: purple">1</span> Cow</span>
+                                </div>
+                                <div class="example-explanation">
+                                    <div>• <span style="color: blue">2</span> is in correct position (<span
+                                            style="color: blue">blue</span>)</div>
+                                    <div>• <span style="color: purple">4</span> exists but wrong position (<span
+                                            style="color: purple">purple</span>)</div>
+                                    <div>• <span class="unmatched">1</span> and <span class="unmatched">7</span> are not
+                                        in code</div>
+                                </div>
 
-                <!-- Right side: All Game Controls -->
-                <div class="right-panel">
+
+                            </div>
+
+                        </div>
+                    </section>
+
                     <div id="user-input">
                         <label for="guess"><strong>Enter your guess : </strong></label>
-                        <input type="text" id="guess" maxlength="5">
+                        <input type="text" id="guess" maxlength="5" aria-label="Enter your guess">
                         <div class="button-group">
-                            <button id="new-game-button" onclick="confirmNewGame()">New Game</button>
-                            <button id="submit-button" onclick="checkGuess()">Submit Guess</button>
+                            <button id="new-game-button" onclick="confirmNewGame()" aria-label="Start a new game">New
+                                Game</button>
+                            <button id="submit-button" onclick="checkGuess()" aria-label="Submit your guess">Submit
+                                Guess</button>
                         </div>
                     </div>
 
-                    <div id="result"></div>
+                    <!-- Result section -->
+                    <div id="result" aria-live="polite"></div>
 
-                    <div id="virtual-keyboard">
+                    <div id="virtual-keyboard" aria-label="Virtual keyboard">
                         <div class="keyboard-row">
-                            <button class="key-btn" onclick="appendNumber('1')">1</button>
-                            <button class="key-btn" onclick="appendNumber('2')">2</button>
-                            <button class="key-btn" onclick="appendNumber('3')">3</button>
-                            <button class="key-btn" onclick="appendNumber('4')">4</button>
-                            <button class="key-btn" onclick="appendNumber('5')">5</button>
+                            <button class="key-btn" onclick="appendNumber('1')" aria-label="Number 1">1</button>
+                            <button class="key-btn" onclick="appendNumber('2')" aria-label="Number 2">2</button>
+                            <button class="key-btn" onclick="appendNumber('3')" aria-label="Number 3">3</button>
+                            <button class="key-btn" onclick="appendNumber('4')" aria-label="Number 4">4</button>
+                            <button class="key-btn" onclick="appendNumber('5')" aria-label="Number 5">5</button>
                         </div>
                         <div class="keyboard-row">
-                            <button class="key-btn" onclick="appendNumber('6')">6</button>
-                            <button class="key-btn" onclick="appendNumber('7')">7</button>
-                            <button class="key-btn" onclick="appendNumber('8')">8</button>
-                            <button class="key-btn" onclick="appendNumber('9')">9</button>
-                            <button class="key-btn" onclick="appendNumber('0')">0</button>
+                            <button class="key-btn" onclick="appendNumber('6')" aria-label="Number 6">6</button>
+                            <button class="key-btn" onclick="appendNumber('7')" aria-label="Number 7">7</button>
+                            <button class="key-btn" onclick="appendNumber('8')" aria-label="Number 8">8</button>
+                            <button class="key-btn" onclick="appendNumber('9')" aria-label="Number 9">9</button>
+                            <button class="key-btn" onclick="appendNumber('0')" aria-label="Number 0">0</button>
                         </div>
                         <div class="keyboard-row">
-                            <button class="key-btn wide-btn" onclick="backspace()">⌫</button>
-                            <button class="key-btn wide-btn" onclick="clearInput()">Clear</button>
-                            <button class="key-btn wide-btn" onclick="checkGuess()">Enter</button>
+                            <button class="key-btn wide-btn" onclick="backspace()" aria-label="Backspace">⌫</button>
+                            <button class="key-btn wide-btn" onclick="clearInput()"
+                                aria-label="Clear input">Clear</button>
+                            <button class="key-btn wide-btn" onclick="checkGuess()"
+                                aria-label="Enter guess">Enter</button>
                         </div>
                     </div>
-                </div>
+                </aside>
             </div>
         </div>
 
-        <footer>
+        <footer role="contentinfo">
             <p>&copy;Vasanth</p>
         </footer>
     </div>
