@@ -293,22 +293,18 @@ label {
 
 /* Result section */
 #result {
-    width: 100%;
-    max-width: 100%;
-    text-align: center;
-    height: 100px;
-    margin: 10px auto;
+    min-height: 80px;
+    padding: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
-    font-family: monospace;
-    font-size: 1.2em;
-    letter-spacing: 2px;
-    padding: 15px;
     background-color: rgb(163, 199, 200);
     border-radius: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    word-wrap: break-word;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* Ensure the result section is visible even when empty */
@@ -380,12 +376,13 @@ label {
 .blink-purple, 
 .blink-blue, 
 .blink-green {
-    margin: 0 5px;
     display: inline-block;
     font-family: monospace;
     letter-spacing: 2px;
     text-align: center;
-    background-color: transparent;
+    padding: 0 5px;
+    font-size: 0.95em;
+    white-space: normal;
 }
 
 /* Remove unnecessary line breaks */
@@ -396,13 +393,21 @@ label {
 /* Mobile adjustments */
 @media (max-width: 768px) {
     #result {
-        height: 70px;
-        font-size: 1em;
-        padding: 10px 15px;
+        min-height: 70px;
+        padding: 10px;
+        font-size: 0.9em;
     }
 
     #result:empty::after {
         font-size: 1em;
+    }
+
+    .blink-red, 
+    .blink-purple, 
+    .blink-blue, 
+    .blink-green {
+        font-size: 0.9em;
+        letter-spacing: 1px;
     }
 }
 
@@ -1133,11 +1138,18 @@ input[type="checkbox"] {
 }
 
 #result {
-    min-height: 80px;  /* Ensure consistent height */
+    min-height: 80px;
     padding: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: rgb(163, 199, 200);
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    word-wrap: break-word;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #result .guess-content {
@@ -1159,5 +1171,47 @@ input[type="checkbox"] {
 
     .attempts-info {
         font-size: 0.85em;
+    }
+}
+
+/* Game over message styling */
+.blink-red, 
+.blink-purple, 
+.blink-blue, 
+.blink-green {
+    display: inline-block;
+    font-family: monospace;
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 0 5px;
+    font-size: 0.95em;
+    white-space: normal;
+}
+
+/* Game over container */
+#result > span {
+    max-width: 100%;
+    padding: 10px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    align-items: center;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    #result {
+        min-height: 70px;
+        padding: 10px;
+        font-size: 0.9em;
+    }
+
+    .blink-red, 
+    .blink-purple, 
+    .blink-blue, 
+    .blink-green {
+        font-size: 0.9em;
+        letter-spacing: 1px;
     }
 }
