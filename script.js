@@ -324,13 +324,53 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// Add touch event handling for mobile
+// Update the keyboard event handling to prevent double inputs
+document.getElementById('virtual-keyboard').addEventListener('click', (e) => {
+    // Prevent click events on touch devices
+    if (window.matchMedia('(pointer: coarse)').matches) {
+        return;
+    }
+
+    const button = e.target.closest('.key-btn');
+    if (!button) return;
+
+    handleKeyPress(button);
+});
+
+// Separate touch event handler
+document.getElementById('virtual-keyboard').addEventListener('touchend', (e) => {
+    e.preventDefault(); // Prevent default to avoid any click events
+    const button = e.target.closest('.key-btn');
+    if (!button) return;
+
+    handleKeyPress(button);
+}, { passive: false });
+
+// Common function to handle key presses
+function handleKeyPress(button) {
+    if (button.dataset.key) {
+        appendNumber(button.dataset.key);
+    } else if (button.dataset.action) {
+        switch (button.dataset.action) {
+            case 'backspace':
+                backspace();
+                break;
+            case 'clear':
+                clearInput();
+                break;
+            case 'enter':
+                checkGuess();
+                break;
+        }
+    }
+}
+
+// Update touch event handling for mobile
 document.addEventListener('touchstart', function(e) {
     if (e.target.classList.contains('key-btn')) {
         e.preventDefault();  // Prevent double-tap zoom
-        e.target.click();   // Trigger the click event
     }
-});
+}, { passive: false });
 
 // Prevent zoom on double tap
 document.addEventListener('dblclick', function(e) {
@@ -467,25 +507,3 @@ function scrollToKeyboard() {
     const keyboardElement = document.getElementById('virtual-keyboard');
     keyboardElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
 }
-
-// Update the keyboard event handling
-document.getElementById('virtual-keyboard').addEventListener('click', (e) => {
-    const button = e.target.closest('.key-btn');
-    if (!button) return;
-
-    if (button.dataset.key) {
-        appendNumber(button.dataset.key);
-    } else if (button.dataset.action) {
-        switch (button.dataset.action) {
-            case 'backspace':
-                backspace();
-                break;
-            case 'clear':
-                clearInput();
-                break;
-            case 'enter':
-                checkGuess();
-                break;
-        }
-    }
-});
