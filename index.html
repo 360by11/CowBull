@@ -50,14 +50,13 @@
 
                 <!-- Right side: All Game Controls -->
                 <div class="right-panel">
-                    <div id="new-game">
-                        <button onclick="startNewGame()">New Game</button>
-                    </div>
-
                     <div id="user-input">
                         <label for="guess"><strong>Enter your guess : </strong></label>
                         <input type="text" id="guess" maxlength="5">
-                        <p><button id="submit-button" onclick="checkGuess()">Submit Guess</button></p>
+                        <div class="button-group">
+                            <button id="new-game-button" onclick="confirmNewGame()">New Game</button>
+                            <button id="submit-button" onclick="checkGuess()">Submit Guess</button>
+                        </div>
                     </div>
 
                     <div id="result"></div>

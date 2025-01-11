@@ -49,9 +49,6 @@ function startNewGame() {
     document.getElementById('result').innerHTML = '';
     document.getElementById('guess-history').innerHTML = placeholderHTML;
 
-    // Reset new game button
-    document.getElementById('new-game').innerHTML = '<button onclick="startNewGame()">New Game</button>';
-
     // Generate new secret code based on current settings
     if (isNumberOfDay) {
         const modeText = repeatableSecret ? "Repeatable" : "Non-Repeatable";
@@ -179,29 +176,31 @@ function checkGuess() {
     // Clear input after successful guess
     document.getElementById('guess').value = '';
 
-    document.getElementById('result').innerHTML = '<br>Result : Bulls: <span class="green">' + bulls + '</span>, Cows: <span class="orange">' + cows + '</span>';
-    if (bulls === secretCode.length) {
-        document.getElementById('new-game').innerHTML = '<button onclick="startNewGame()">New Game</button>';
-    } else if (attempts >= maxAttempts) {
-        document.getElementById('new-game').innerHTML = '<button onclick="startNewGame()">New Game</button>';
-    }
+    // Update result section with latest guess in same format as history
+    const resultHTML = `
+        <div class="guess-content">
+            <span class="guess-number">${attempts}</span>
+            <span class="guess-value">${guess}</span>
+            <span>→</span>
+            <div class="guess-result">
+                <span>Bulls: <span class="green">${bulls}</span></span>
+                <span>Cows: <span class="orange">${cows}</span></span>
+            </div>
+        </div>
+    `;
+    document.getElementById('result').innerHTML = resultHTML;
 
-
-    // for blink
+    // Game over conditions
     if (bulls === secretCode.length) {
         end = true;
         updateGuessHistory();
-        document.getElementById('result').innerHTML = '<br><br><span class="blink-green">Congratulations! You guessed the secret code!</span>';
-        document.getElementById('new-game').innerHTML = '<button onclick="startNewGame()">New Game</button>';
+        document.getElementById('result').innerHTML = '<span class="blink-green">Congratulations! You guessed the secret code!</span>';
     } else if (attempts >= maxAttempts) {
         end = true;
         updateGuessHistory();
-        const gameOverMessage = '<br><span class="blink-red">Game Over! </span><span class="blink-purple">You have used all attempts. The secret code was </span><span class="blink-blue">' + secretCode + '</span>';
+        const gameOverMessage = '<span class="blink-red">Game Over! </span><span class="blink-purple">You have used all attempts. The secret code was </span><span class="blink-blue">' + secretCode + '</span>';
         document.getElementById('result').innerHTML = gameOverMessage;
-        document.getElementById('new-game').innerHTML = '<button onclick="startNewGame()">New Game</button>';
     }
-
-
 }
 
 function isNonRepeating(number) {
@@ -217,40 +216,45 @@ function updateGuessHistory() {
         return;
     }
 
-    historyDiv.innerHTML = '<h3>Guess History</h3>';
-
-    guesses.forEach(function (guess, index) {
-        let guessValue = '';
-        
-        if (end) {
-            // Color code each digit when game ends
-            for (let i = 0; i < guess.guess.length; i++) {
-                if (guess.guess[i] === secretCode[i]) {
-                    guessValue += `<span class="green">${guess.guess[i]}</span>`;
-                } else if (secretCode.includes(guess.guess[i])) {
-                    guessValue += `<span class="orange">${guess.guess[i]}</span>`;
+    historyDiv.innerHTML = `
+        <h3>Guess History</h3>
+        <div class="history-content">
+            ${guesses.map((guess, index) => {
+                let guessValue = '';
+                
+                if (end) {
+                    // Color code each digit when game ends
+                    for (let i = 0; i < guess.guess.length; i++) {
+                        if (guess.guess[i] === secretCode[i]) {
+                            guessValue += `<span class="green">${guess.guess[i]}</span>`;
+                        } else if (secretCode.includes(guess.guess[i])) {
+                            guessValue += `<span class="orange">${guess.guess[i]}</span>`;
+                        } else {
+                            guessValue += guess.guess[i];
+                        }
+                    }
                 } else {
-                    guessValue += guess.guess[i];
+                    guessValue = guess.guess;
                 }
-            }
-        } else {
-            guessValue = guess.guess;
-        }
 
-        const guessRow = `
-            <div class="history-row">
-                <span class="guess-number">${index + 1}.</span>
-                <div class="guess-content">
-                    <span class="guess-value">${guessValue}</span>
-                    <div class="guess-result">
-                        <span>Bulls: <span class="green">${guess.bulls}</span></span>
-                        <span>Cows: <span class="orange">${guess.cows}</span></span>
-                    </div>
-                </div>
-            </div>`;
-        
-        historyDiv.innerHTML += guessRow;
-    });
+                return `
+                    <div class="history-row">
+                        <span class="guess-number">${index + 1}.</span>
+                        <div class="guess-content">
+                            <span class="guess-value">${guessValue}</span>
+                            <div class="guess-result">
+                                <span>Bulls: <span class="green">${guess.bulls}</span></span>
+                                <span>Cows: <span class="orange">${guess.cows}</span></span>
+                            </div>
+                        </div>
+                    </div>`;
+            }).join('')}
+        </div>
+    `;
+
+    // Scroll to the latest guess
+    const historyContent = historyDiv.querySelector('.history-content');
+    historyContent.scrollTop = historyContent.scrollHeight;
 }
 
 function appendNumber(num) {
@@ -349,3 +353,20 @@ window.onload = function () {
     // Check for day change every minute
     setInterval(checkDayChange, 60000);
 };
+
+function confirmNewGame() {
+    // Skip confirmation if game is over (all attempts used or won)
+    if (end) {
+        startNewGame();
+        return;
+    }
+    
+    // Only ask for confirmation if game is in progress
+    if (attempts > 0) {
+        if (confirm('Are you sure you want to start a new game? Current progress will be lost.')) {
+            startNewGame();
+        }
+    } else {
+        startNewGame();
+    }
+}
