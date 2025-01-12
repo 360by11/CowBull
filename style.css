@@ -1,1082 +1,111 @@
 /* Base layout fixes */
 html, body {
-    height: auto;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, rgb(133, 169, 170), rgb(153, 189, 190));
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    box-sizing: border-box;
-    min-height: 100vh;
-    overflow-y: auto;
-    padding-bottom: 0;
-    position: relative;
+    overflow-x: hidden;
 }
 
 #container {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    width: 100%;
+    max-width: 600px;
     margin: 0 auto;
-    background-color: rgb(153, 189, 190);
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    padding-bottom: 200px;
     box-sizing: border-box;
-    overflow: visible;
-    min-height: calc(100vh - 20px);
-    padding-bottom: 220px;
-    position: relative;
+    width: 100%;
 }
 
-/* Game container */
-#game-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
+/* Header styles */
+#header {
+    text-align: center;
+    margin-bottom: 30px;
 }
 
 #game-title {
-    text-align: center;
     font-size: 2.5em;
-    margin: 5px 0 15px 0;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
     font-family: 'Courier New', Courier, monospace;
-    letter-spacing: 2px;
 }
 
-/* Options section */
-#options {
+.utc-time-display {
+    font-family: 'Courier New', Courier, monospace;
+    color: #333;
+    font-size: 0.9em;
+}
+
+/* Game sections */
+#options, #game-examples, #guess-history, #result {
     background-color: rgb(163, 199, 200);
-    padding: 20px;
     border-radius: 12px;
-    margin-bottom: 0;
+    padding: 20px;
+    margin-bottom: 20px;
     width: 100%;
-    max-width: 100%;
     box-sizing: border-box;
 }
 
-/* Option sections */
+/* Options styling */
 .option-section {
-    margin: 15px 0;
-    padding: 15px;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
 }
 
 .option-title {
+    margin: 0 0 12px 0;
     font-size: 1.1em;
     color: #333;
-    margin: 0 0 12px 15px;
-    text-align: left;
     font-weight: bold;
 }
 
-/* Radio group container */
 .radio-group-container {
     display: flex;
-    flex-direction: row;
     gap: 20px;
-    align-items: center;
-    padding-left: 30px;
+    padding-left: 15px;
 }
 
-/* Radio group styling */
 .radio-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 0;
-    white-space: nowrap;
-}
-
-.radio-group input[type="radio"] {
-    margin: 0;
-    cursor: pointer;
-}
-
-.radio-group label {
-    margin: 0;
-    cursor: pointer;
-    font-size: 1em;
-    color: #333;
-}
-
-/* Checkbox group styling */
-.checkbox-group.standalone {
-    text-align: center;
-    padding: 10px 0;
-    margin-bottom: 15px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.checkbox-group.standalone label {
-    font-weight: bold;
-    color: #333;
-}
-
-/* Selected state styling */
-.radio-group input[type="radio"]:checked + label,
-.checkbox-group input[type="checkbox"]:checked + label {
-    color: #2196F3;
-    font-weight: bold;
-}
-
-/* UTC note styling */
-.utc-note {
-    display: block;
-    text-align: center;
-    font-size: 0.85em;
-    color: #555;
-    font-style: italic;
-    margin-top: 5px;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    #options {
-        padding: 15px;
-    }
-
-    .option-section {
-        padding: 12px;
-        margin: 12px 0;
-    }
-
-    .option-title {
-        margin: 0 0 12px 10px;
-    }
-
-    .radio-group-container {
-        padding-left: 20px;
-        gap: 15px;
-    }
-    
-    .radio-group {
-        flex-shrink: 0;
-    }
-}
-
-/* Radio buttons styling */
-input[type="radio"] {
-    margin-right: 8px;
-}
-
-label {
-    margin-left: 5px;
-    color: #444;
-    font-size: 0.95em;
-    transition: color 0.2s ease;
-}
-
-/* New game button */
-#new-game button {
-    background-color: #4a90e2;
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1em;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#new-game button:hover {
-    background-color: #357abd;
-}
-
-/* Game input section */
-#user-input {
-    width: 100%;
-    max-width: 100%;
-    text-align: center;
-    margin: -10px auto 10px;
-    padding: 15px;
-    background-color: rgb(163, 199, 200);
-    border-radius: 12px;
-}
-
-#guess {
-    padding: 10px 15px;
-    font-size: 1.2em;
-    width: 150px;
-    border: 2px solid rgb(133, 169, 170);
-    border-radius: 8px;
-    margin: 10px auto;
-    background-color: rgb(163, 199, 200);
-    color: #333;
-    display: block;
-}
-
-#submit-button {
-    background-color: #5cb85c;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#submit-button:hover {
-    background-color: #4cae4c;
-}
-
-/* Split layout */
-.split-container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    min-height: 0;
-    align-items: center;
-    padding: 0;
-}
-
-.left-panel, .right-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    gap: 10px;
-    padding: 10px;
-    background-color: rgba(163, 199, 200, 0.8);
-    border-radius: 12px;
-    box-sizing: border-box;
-    width: 100%;
-}
-
-/* Media query for larger screens */
-@media (min-width: 768px) {
-    .split-container {
-        flex-direction: row;
-        justify-content: center;
-    }
-
-    .left-panel, .right-panel {
-        flex: 0 0 50%;
-        max-width: 600px;
-    }
-}
-
-/* Game examples section styling */
-#game-examples {
-    background-color: rgb(163, 199, 200);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 15px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.example-section {
-    margin: 15px 0;
-    padding: 15px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.example-section p {
-    margin: 0 0 12px 15px;
-    font-weight: bold;
-    font-size: 1.1em;
-    text-align: left;
-    color: #333;
-}
-
-.example-guess {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    margin: 8px 0;
-    font-family: monospace;
-    font-size: 1.2em;
-    font-weight: normal;
-    margin-left: 30px;
-    width: calc(100% - 30px);
-    gap: 20px;
-}
-
-.example-result {
-    margin-left: auto;
-    padding-right: 15px;
-}
-
-.example-explanation {
-    font-size: 1em;
-    line-height: 1.8;
-    margin: 15px 0;
-    color: #444;
-    font-family: monospace;
-    font-weight: normal;
-    padding-left: 30px;
-    padding-right: 15px;
-    width: calc(100% - 30px);
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    #game-examples {
-        padding: 15px;
-    }
-
-    .example-section {
-        padding: 12px;
-        margin: 12px 0;
-    }
-
-    .example-section p {
-        margin: 0 0 12px 10px;
-    }
-
-    .example-guess {
-        margin-left: 20px;
-        width: calc(100% - 20px);
-        padding: 8px 12px;
-    }
-
-    .example-explanation {
-        padding-left: 20px;
-        padding-right: 12px;
-    }
-
-    .example-result {
-        padding-right: 12px;
-    }
-}
-
-/* Small screen adjustments */
-@media (max-width: 360px) {
-    .example-section {
-        padding: 12px;
-    }
-
-    .example-guess {
-        font-size: 1em;
-        padding: 6px 10px;
-        gap: 10px;
-    }
-
-    .example-explanation {
-        font-size: 0.9em;
-    }
-}
-
-/* Guess history section */
-#guess-history {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 400px;
-    max-height: 400px;
-    padding: 20px;
-    background-color: rgb(163, 199, 200);
-    border-radius: 12px;
-    width: 100%;
-    box-sizing: border-box;
-    margin: 0 auto 10px;
-    overflow-y: hidden;
-}
-
-/* Add scrollable class */
-#guess-history.scrollable {
-    overflow-y: auto;
-}
-
-/* Placeholder text */
-.placeholder-text {
-    flex: 1;
-    color: #333;
-    font-style: italic;
-    padding: 20px;
-    text-align: center;
-    line-height: 1.6;
-    min-height: auto;
-    overflow-y: hidden;
-}
-
-/* History content */
-.history-content {
-    flex: 1;
-    min-height: 320px;
-    overflow-y: auto;
-    padding-right: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-/* Media query for larger screens */
-@media (min-width: 768px) {
-    #guess-history {
-        min-height: 400px;
-        max-height: 400px;
-    }
-
-    .history-content {
-        min-height: 320px;
-    }
-}
-
-/* Result section */
-#result {
-    min-height: 80px;
-    padding: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(163, 199, 200);
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    word-wrap: break-word;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* Ensure the result section is visible even when empty */
-#result:empty {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 8px 15px;
-    font-family: monospace;
-    letter-spacing: 2px;
-}
-
-#result:empty::before {
-    content: attr(data-placeholder);
-    font-size: 1.4em;
-    color: #666;
-    letter-spacing: 4px;
-}
-
-#result:empty::after {
-    content: none;
-}
-
-#result .guess-number {
-    background-color: rgba(0, 0, 0, 0.1);
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-weight: bold;
-    font-size: 0.9em;
-    margin-right: 10px;
-}
-
-#result .guess-content {
-    width: auto;
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-#result .guess-value {
-    font-family: monospace;
-    font-size: 1.4em;
-    letter-spacing: 4px;
-    font-weight: bold;
-}
-
-#result .guess-result {
-    display: flex;
-    gap: 15px;
-    font-size: 0.9em;
-}
-
-#result .green, 
-#result .orange {
-    padding: 2px 5px;
-    border-radius: 3px;
-}
-
-#result span {
-    margin: 0 5px;
-}
-
-/* Game over messages */
-.blink-red, 
-.blink-purple, 
-.blink-blue, 
-.blink-green {
-    display: inline-block;
-    font-family: monospace;
-    letter-spacing: 2px;
-    text-align: center;
-    padding: 0 5px;
-    font-size: 0.95em;
-    white-space: normal;
-}
-
-/* Remove unnecessary line breaks */
-#result br {
-    display: none;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    #result {
-        min-height: 70px;
-        padding: 10px;
-        font-size: 0.9em;
-    }
-
-    #result:empty::after {
-        font-size: 1em;
-    }
-
-    .blink-red, 
-    .blink-purple, 
-    .blink-blue, 
-    .blink-green {
-        font-size: 0.9em;
-        letter-spacing: 1px;
-    }
-}
-
-/* Virtual keyboard */
-#virtual-keyboard {
-    position: fixed;
-    bottom: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 24px);
-    max-width: 600px;
-    background-color: rgb(163, 199, 200);
-    border-radius: 12px;
-    padding: 8px;
-    z-index: 1000;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    margin: 0;
-}
-
-.keyboard-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    gap: 8px;
-}
-
-.key-btn {
-    flex: 1;
-    min-width: 40px;
-    height: 45px;
-    margin: 0;
-    border: none;
-    background-color: rgb(173, 209, 210);
-    border-radius: 10px;
-    font-size: 1.2em;
-    cursor: pointer;
-    color: #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Add specific styling for the Guess button */
-.key-btn[data-action="enter"] {
-    background-color: #4a90e2;  /* Match New Game button color */
-    color: white;
-}
-
-.key-btn[data-action="enter"]:hover {
-    background-color: #357abd;  /* Match New Game button hover color */
-}
-
-.key-btn:hover {
-    background-color: rgb(183, 219, 220);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.wide-btn {
-    flex: 1.5;
-}
-
-/* Animation classes */
-.green { 
-    color: blue !important;  /* Change to blue text */
-    padding: 2px;
-}
-
-.orange { 
-    color: purple !important;  /* Change to purple text */
-    padding: 2px;
-}
-
-.blink-purple { animation: blink 1s infinite; }
-.blink-blue { animation: blinkAnswer 1s infinite; }
-.blink-red { animation: blinkOver 1s infinite; }
-.blink-green { animation: blinkCongrats 1s infinite; }
-
-/* Footer */
-footer {
-    text-align: center;
-    margin-top: auto;
-    padding: 5px 0;
-    color: #333;
-    font-size: 1.1em;
-    font-family: 'Courier New', Courier, monospace;
-    letter-spacing: 1px;
-    background-color: transparent;
-    border-radius: 8px;
-    position: relative;
-    z-index: 101;
-    margin-top: 10px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 999;
-    padding: 3px 0;
-    background-color: rgb(153, 189, 190);
-    height: 25px;
-    margin: 0;
-}
-
-/* Mobile adjustments for footer */
-@media (max-width: 768px) {
-    footer {
-        padding: 3px 0;
-        font-size: 1em;
-    }
-}
-
-/* Guess history placeholder */
-.placeholder-text {
-    flex: 1;
-    color: #333;
-    font-style: italic;
-    padding: 20px;
-    text-align: center;
-    line-height: 1.6;
-    min-height: 720px;
-    overflow-y: auto;
-}
-
-.placeholder-text ul {
-    margin: 15px auto;
-    padding-left: 0;
-    list-style-position: inside;
-    max-width: 90%;
-}
-
-.placeholder-text li {
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-#new-game {
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-    margin-bottom: 0;
-}
-
-/* Update animation colors for end game states */
-@keyframes blink {
-    0% { color: purple; }
-    50% { color: transparent; }
-    100% { color: purple; }
-}
-
-@keyframes blinkAnswer {
-    0% { color: blue; }
-    50% { color: transparent; }
-    100% { color: blue; }
-}
-
-@keyframes blinkOver {
-    0% { color: red; }
-    50% { color: transparent; }
-    100% { color: red; }
-}
-
-@keyframes blinkCongrats {
-    0% { color: blue; }
-    50% { color: transparent; }
-    100% { color: green; }
-}
-
-.keyboard-row:last-child {
-    margin-bottom: 0;
-}
-
-/* Remove any margin-bottom from game-container */
-#game-container {
-    margin-bottom: 0;
-}
-
-/* Basic responsive design */
-@media (max-width: 768px) {
-    body {
-        padding: 5px;
-    }
-
-    #container {
-        padding: 8px;
-        padding-bottom: calc(160px + 25px);
-    }
-
-    /* Title adjustments */
-    #game-title {
-        font-size: 2em;
-        margin: 3px 0 12px 0;
-    }
-
-    /* Options section */
-    #options {
-        padding: 8px;
-        margin-bottom: 8px;
-    }
-
-    #options div {
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    label {
-        margin-right: 5px;
-    }
-
-    /* Split layout adjustments */
-    .split-container {
-        gap: 10px;
-    }
-
-    .left-panel {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    #guess-history {
-        padding: 15px;
-        min-height: 250px;
-        max-height: 350px;
-    }
-
-    /* Input and keyboard adjustments */
-    #guess {
-        width: 120px;
-        padding: 8px 12px;
-    }
-
-    .key-btn {
-        min-width: 32px;
-        height: 40px;
-        font-size: 1.1em;
-    }
-
-    .wide-btn {
-        flex: 1.2;
-    }
-
-    /* History row adjustments */
-    .history-row {
-        padding: 6px 8px;
-    }
-
-    .guess-value {
-        font-size: 1em;
-    }
-
-    .guess-result {
-        font-size: 0.9em;
-    }
-
-    footer {
-        padding: 2px 0;
-        font-size: 0.85em;
-    }
-
-    #virtual-keyboard {
-        padding: 6px;
-        bottom: 25px;
-    }
-
-    .keyboard-row {
-        gap: 4px;
-        margin-bottom: 4px;
-    }
-
-    /* Ensure content doesn't get hidden behind keyboard */
-    #guess-history {
-        margin-bottom: 10px;
-    }
-
-    #result {
-        margin-bottom: 10px;
-    }
-}
-
-/* Additional styles for very small screens */
-@media (max-width: 360px) {
-    #game-title {
-        font-size: 1.8em;
-    }
-
-    .key-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 1em;
-    }
-
-    .wide-btn {
-        width: 60px;
-    }
-
-    #guess {
-        width: 100px;
-    }
-
-    #container {
-        padding-bottom: calc(140px + 25px);
-    }
-
-    #virtual-keyboard {
-        padding: 4px;
-    }
-
-    .key-btn {
-        min-width: 28px;
-        height: 36px;
-        font-size: 1em;
-    }
-}
-
-/* Simplified Guess History Formatting */
-.history-row {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 8px 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.guess-number {
-    font-weight: bold;
-    min-width: 25px;
-}
-
-.guess-content {
-    flex: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.guess-value {
-    font-family: monospace;
-    font-size: 1.1em;
-    letter-spacing: 2px;
-}
-
-.guess-result {
-    display: flex;
-    gap: 15px;
-}
-
-/* Update placeholder text to show new highlighting */
-.placeholder-text li span {
-    padding: 2px 5px;
-    border-radius: 3px;
-}
-
-.placeholder-text li span[style*="blue"] {
-    color: blue !important;
-    background-color: transparent;
-}
-
-.placeholder-text li span[style*="purple"] {
-    color: purple !important;
-    background-color: transparent;
-}
-
-/* Guess History Formatting */
-.history-container {
-    padding: 10px 0;
-}
-
-.history-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 15px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    margin-bottom: 8px;
-}
-
-.history-row:last-child {
-    margin-bottom: 0;
-    border-bottom: none;
-}
-
-.guess-info {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.guess-number {
-    background-color: rgba(0, 0, 0, 0.1);
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-weight: bold;
-    font-size: 0.9em;
-}
-
-.guess-value {
-    font-family: monospace;
-    font-size: 1.2em;
-    letter-spacing: 2px;
-}
-
-.guess-result {
-    display: flex;
-    gap: 15px;
-    font-size: 0.9em;
-}
-
-.bulls, .cows {
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
-/* UTC reset note styling */
-.utc-note {
-    font-size: 0.85em;
-    color: #555;
-    font-style: italic;
-    margin-top: 5px;
-    display: block;
-}
-
-/* Update mobile styles for the note */
-@media (max-width: 768px) {
-    .utc-note {
-        display: block;
-        margin-left: 0;
-        margin-top: 5px;
-    }
-}
-
-/* Example section styling */
-.example-section {
-    margin: 15px auto;
-    padding: 12px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    max-width: 90%;
-}
-
-.example-section p {
-    margin: 0 0 8px 0;
-    font-weight: normal;
-    font-size: 0.95em;
+.checkbox-group.standalone {
     text-align: center;
+    padding: 10px 0;
+    margin-bottom: 15px;
 }
 
-.example-guess {
+/* Guess History and Result Styling */
+#guess-history {
+    min-height: 400px;
+    max-height: 400px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 6px 10px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
-    margin: 8px auto;
-    font-family: monospace;
-    font-size: 1.1em;
-    font-weight: normal;
-    max-width: 80%;
-    gap: 15px;
+    flex-direction: column;
+    background-color: rgb(163, 199, 200);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
-.example-explanation {
-    font-size: 0.9em;
-    line-height: 1.6;
-    margin: 10px auto;
-    color: #444;
-    font-family: monospace;
-    font-weight: normal;
-    max-width: 85%;
-    text-align: center;
+#guess-history h2 {
+    text-align: left;
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 1.5em;
 }
 
-.example-explanation div {
-    margin-bottom: 4px;
-    font-weight: normal;
-}
-
-.example-explanation div:last-child {
-    margin-bottom: 0;
-}
-
-.unmatched {
-    opacity: 0.7;
-}
-
-/* Button group styling */
-.button-group {
-    display: flex;
-    justify-content: center;
-    margin: 10px 0;
-    width: 100%;
-}
-
-#new-game-button {
-    background-color: #4a90e2;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    min-width: 120px;  /* Ensure consistent button width */
-}
-
-#new-game-button:hover {
-    background-color: #357abd;
-}
-
-/* Remove old new-game styles */
-#new-game {
-    display: none;
-}
-
-/* History content wrapper */
 .history-content {
     flex: 1;
-    min-height: 720px;
     overflow-y: auto;
     padding-right: 5px;
     display: flex;
@@ -1084,7 +113,7 @@ footer {
     gap: 8px;
 }
 
-/* Scrollbar styling */
+/* Custom scrollbar styling */
 .history-content::-webkit-scrollbar {
     width: 8px;
 }
@@ -1099,405 +128,642 @@ footer {
     border-radius: 4px;
 }
 
-/* Header styling */
-#header {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
+.history-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
 }
 
-#game-title {
-    margin: 0 0 5px 0;
-    font-size: 2.5em;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    font-family: 'Courier New', Courier, monospace;
-    letter-spacing: 2px;
-}
-
-#new-game-button-top {
-    background-color: #4a90e2;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-#new-game-button-top:hover {
-    background-color: #357abd;
-}
-
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-}
-
-.option-group {
-    margin-bottom: 20px;
-    padding-top: 5px;
-}
-
-.radio-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    margin-left: 15px;
-}
-
-.radio-group.center-align {
-    justify-content: center;
-    margin-top: 10px;
-}
-
-/* Left panel adjustments */
-.left-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* Section headings */
-h2, h3 {
+.placeholder-text {
+    flex: 1;
     text-align: center;
-    width: 100%;
-    margin-bottom: 15px;
+    font-style: italic;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+    overflow-y: auto;
 }
 
-/* Consistent width for all sections */
-#options,
-#user-input,
-#guess-history,
-#result,
-#virtual-keyboard {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+.placeholder-text ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px auto;
+    max-width: 80%;
 }
 
-/* Split container adjustments */
-.split-container {
+.placeholder-text li {
+    margin: 15px 0;
+    line-height: 1.8;
+}
+
+/* Result and History Entry Styling */
+.history-row, #result .result-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.guess-number {
+    background-color: rgba(0, 0, 0, 0.1);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.9em;
+    flex-shrink: 0;
+}
+
+.guess-content {
     flex: 1;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    min-height: 0;
     align-items: center;
-    padding: 0;
+    gap: 15px;
+    font-family: monospace;
 }
 
-/* Checkbox group styling */
-.checkbox-group {
+.guess-value {
+    font-size: 1.2em;
+    letter-spacing: 3px;
+    font-weight: bold;
+}
+
+.guess-result {
+    margin-left: auto;
     display: flex;
-    align-items: center;
-    margin-top: 10px;
-    gap: 5px;
-}
-
-.checkbox-group .utc-note {
-    margin-left: 5px;
-    margin-top: 0;
-    display: inline;
-}
-
-input[type="checkbox"] {
-    margin-right: 5px;
-    cursor: pointer;
-}
-
-.checkbox-group.standalone {
-    padding: 10px 0 15px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    margin-left: 15px;
-}
-
-.checkbox-group.standalone label {
-    font-weight: bold;
-    color: #333;
-}
-
-/* Radio button and label styling */
-.radio-group input[type="radio"] {
-    margin-right: 8px;
-}
-
-.radio-group input[type="radio"]:checked + label {
-    color: blue;
-    font-weight: bold;
-}
-
-/* Checkbox styling */
-.checkbox-group input[type="checkbox"]:checked + label {
-    color: blue;
-    font-weight: bold;
-}
-
-/* UTC time display styling */
-.utc-time-display {
-    text-align: center;
-    font-family: 'Courier New', Courier, monospace;
-    color: #333;
-    font-size: 1.1em;
-    margin-top: 5px;
-    letter-spacing: 1px;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    #guess-history {
-        min-height: 700px;
-        max-height: 700px;
-    }
-
-    .placeholder-text,
-    .history-content {
-        min-height: 620px;
-    }
-}
-
-/* Result section styling updates */
-.result-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    align-items: center;
+    gap: 15px;
+    font-size: 0.9em;
 }
 
 .attempts-info {
-    font-size: 0.9em;
-    color: #555;
+    text-align: center;
     font-style: italic;
-    padding: 5px 10px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
+    color: #555;
+    margin-top: 10px;
+    font-size: 0.9em;
 }
 
+/* Result Section */
 #result {
     min-height: 80px;
-    padding: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(163, 199, 200);
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    word-wrap: break-word;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-#result .guess-content {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 8px 15px;
-    border-radius: 8px;
-    width: auto;
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    #result {
-        min-height: 70px;
-        padding: 10px;
-    }
-
-    .attempts-info {
-        font-size: 0.85em;
-    }
-}
-
-/* Game over message styling */
-.blink-red, 
-.blink-purple, 
-.blink-blue, 
-.blink-green {
-    display: inline-block;
-    font-family: monospace;
-    letter-spacing: 2px;
-    text-align: center;
-    padding: 0 5px;
-    font-size: 0.95em;
-    white-space: normal;
-}
-
-/* Game over container */
-#result > span {
-    max-width: 100%;
-    padding: 10px;
-    display: inline-flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5px;
-    align-items: center;
-}
-
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    #result {
-        min-height: 70px;
-        padding: 10px;
-        font-size: 0.9em;
-    }
-
-    .blink-red, 
-    .blink-purple, 
-    .blink-blue, 
-    .blink-green {
-        font-size: 0.9em;
-        letter-spacing: 1px;
-    }
-}
-
-/* Small screen adjustments */
-@media (max-width: 360px) {
-    #guess-history {
-        min-height: 650px;
-        max-height: 650px;
-    }
-
-    .placeholder-text,
-    .history-content {
-        min-height: 570px;
-    }
-}
-
-/* Common background color for all sections */
-#options,
-#game-examples,
-#guess-history,
-#result {
     background-color: rgb(163, 199, 200);
     border-radius: 12px;
     padding: 20px;
-    width: 100%;
-    box-sizing: border-box;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
-/* Common inner section styling */
-.option-section,
-.example-section {
-    margin: 15px 0;
-    padding: 15px;
+#result .history-row {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* Example guess styling */
-.example-guess {
+    padding: 12px 15px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 10px 15px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    margin: 8px 0;
-    font-family: monospace;
-    font-size: 1.2em;
-    font-weight: normal;
-    margin-left: 30px;
-    width: calc(100% - 30px);
-    gap: 20px;
+    gap: 15px;
+    text-align: left;
 }
 
-/* Example explanation styling */
-.example-explanation {
-    font-size: 1em;
-    line-height: 1.8;
-    margin: 15px 0;
-    color: #444;
-    font-family: monospace;
-    font-weight: normal;
-    padding-left: 30px;
-    padding-right: 15px;
-    width: calc(100% - 30px);
+#result .guess-number {
+    background-color: rgba(0, 0, 0, 0.1);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.9em;
+    flex-shrink: 0;
 }
 
-/* Mobile adjustments */
-@media (max-width: 768px) {
-    .example-guess,
-    .example-explanation {
-        margin-left: 20px;
-        width: calc(100% - 20px);
-        padding-right: 0;
-    }
-}
-
-/* Result content styling */
 #result .guess-content {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 8px 15px;
-    border-radius: 8px;
-    width: auto;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    font-family: monospace;
+}
+
+#result .guess-value {
+    font-size: 1.2em;
+    letter-spacing: 3px;
+    font-weight: bold;
+}
+
+#result .guess-result {
     display: flex;
     gap: 15px;
-    align-items: center;
+    font-size: 0.9em;
 }
 
-/* History row styling */
-.history-row {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    padding: 8px 15px;
+.attempts-info {
+    text-align: center;
+    font-style: italic;
+    color: #555;
+    font-size: 0.95em;
+    font-family: monospace;
+    margin-top: 8px;
+    width: 100%;
+}
+
+#result:empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+}
+
+#result:empty::before {
+    content: '_';
+    font-family: monospace;
+    font-size: 1.4em;
+    letter-spacing: 4px;
+    color: #666;
+}
+
+/* Game Over Messages */
+.blink-red {
+    color: red;
+    animation: blinkRed 1s infinite;
+}
+
+.blink-blue {
+    color: blue;
+    animation: blinkBlue 1s infinite;
+}
+
+.blink-purple {
+    color: purple;
+    animation: blinkPurple 1s infinite;
+}
+
+.blink-green {
+    color: green;
+    animation: blinkGreen 1s infinite;
+}
+
+@keyframes blinkRed {
+    0% { color: red; }
+    50% { color: rgba(255, 0, 0, 0.5); }
+    100% { color: red; }
+}
+
+@keyframes blinkBlue {
+    0% { color: blue; }
+    50% { color: rgba(0, 0, 255, 0.5); }
+    100% { color: blue; }
+}
+
+@keyframes blinkPurple {
+    0% { color: purple; }
+    50% { color: rgba(128, 0, 128, 0.5); }
+    100% { color: purple; }
+}
+
+@keyframes blinkGreen {
+    0% { color: green; }
+    50% { color: rgba(0, 128, 0, 0.5); }
+    100% { color: green; }
+}
+
+.blink-red, .blink-purple, .blink-blue, .blink-green {
+    display: inline-block;
+    font-family: monospace;
+    letter-spacing: 2px;
+    padding: 0 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+/* Virtual Keyboard */
+#virtual-keyboard {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 560px;
+    background-color: rgb(163, 199, 200);
+    border-radius: 12px;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.keyboard-row {
+    display: flex;
+    gap: 8px;
     margin-bottom: 8px;
 }
 
-/* Common title styling */
-.option-title,
-.example-section p {
-    margin: 0 0 12px 15px;
-    font-weight: bold;
-    font-size: 1.1em;
-    text-align: left;
+.keyboard-row:last-child {
+    margin-bottom: 0;
+}
+
+.key-btn {
+    flex: 1;
+    height: 45px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-size: 1.2em;
     color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-/* Common content container styling */
-.radio-group-container,
-.example-guess,
-.example-explanation {
-    padding-left: 30px;
-    width: calc(100% - 30px);
+.key-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Mobile adjustments */
+.key-btn[data-action="enter"] {
+    background-color: #4a90e2;
+    color: white;
+}
+
+.key-btn[data-action="new-game"] {
+    background-color: #4a90e2;
+    color: white;
+}
+
+.wide-btn {
+    flex: 1.2;
+}
+
+/* Footer */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 5px 0;
+    background-color: rgb(153, 189, 190);
+    font-family: 'Courier New', Courier, monospace;
+    z-index: 999;
+}
+
+/* New Game Button */
+#new-game-button {
+    display: none;
+}
+
+.button-group {
+    display: none;
+}
+
+/* Mobile Adjustments */
 @media (max-width: 768px) {
-    #options,
-    #game-examples,
-    #guess-history,
+    #container {
+        padding: 15px;
+        padding-bottom: 180px;
+    }
+
+    .keyboard-row {
+        gap: 6px;
+    }
+
+    .key-btn {
+        height: 40px;
+        font-size: 1.1em;
+    }
+
+    #guess-history, #result {
+        padding: 15px;
+    }
+
+    .history-row, #result .result-container {
+        padding: 10px 12px;
+    }
+
+    .guess-value {
+        font-size: 1.1em;
+        letter-spacing: 2px;
+    }
+
+    .guess-result {
+        font-size: 0.85em;
+    }
+
+    #guess-history {
+        min-height: 350px;
+        max-height: 350px;
+    }
+}
+
+@media (max-width: 360px) {
+    #container {
+        padding: 10px;
+        padding-bottom: 160px;
+    }
+
+    .key-btn {
+        height: 35px;
+        font-size: 1em;
+    }
+
+    #guess-history {
+        min-height: 300px;
+        max-height: 300px;
+    }
+}
+
+/* Color Highlights */
+.blue { color: blue !important; }
+.purple { color: purple !important; }
+.green { color: blue !important; }
+.orange { color: purple !important; }
+
+/* Game Over Animations */
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.blink-red, .blink-purple, .blink-blue, .blink-green {
+    animation: blink 1s infinite;
+}
+
+/* Example Section Styling */
+#game-examples {
+    background-color: rgb(163, 199, 200);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.example-section {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 0;
+}
+
+.example-section p {
+    margin: 0 0 10px 0;
+    font-size: 1.1em;
+    color: #333;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 8px;
+}
+
+.example-section p:not(:first-child) {
+    margin-top: 15px;
+}
+
+.example-guess {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: monospace;
+    font-size: 1.2em;
+    gap: 15px;
+}
+
+.example-result {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.example-explanation {
+    padding: 10px 15px;
+    line-height: 1.6;
+    color: #333;
+    font-size: 0.95em;
+}
+
+.example-explanation div {
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.example-explanation div:first-child {
+    margin-top: 0;
+}
+
+.example-explanation div:last-child {
+    margin-bottom: 0;
+}
+
+.unmatched {
+    opacity: 0.6;
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+/* Mobile adjustments for examples */
+@media (max-width: 768px) {
+    .example-section {
+        padding: 15px;
+    }
+
+    .example-guess {
+        font-size: 1.1em;
+        padding: 10px 12px;
+    }
+
+    .example-explanation {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+}
+
+/* Section Headers */
+#options-heading, #examples-heading, #history-heading {
+    text-align: left;
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding-left: 5px;
+}
+
+/* Remove visually-hidden class for options and examples headings */
+.visually-hidden {
+    display: block;
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    clip: auto;
+    border: 0;
+}
+
+/* Update option titles to be smaller than section headers */
+.option-title {
+    margin: 0 0 12px 0;
+    font-size: 1.1em;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Mobile adjustments for headers */
+@media (max-width: 768px) {
+    #options-heading, #examples-heading, #history-heading {
+        font-size: 1.3em;
+        margin: 0 0 15px 0;
+        padding-left: 3px;
+    }
+}
+
+/* Options Sentence Styling */
+.options-sentence {
+    text-align: center;
+    font-size: 1.2em;
+    color: #333;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sentence-line {
+    line-height: 1.5;
+    font-size: 1em;
+}
+
+.sentence-line:first-child {
+    font-weight: 500;
+}
+
+.sentence-line:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    font-weight: 500;
+}
+
+.options-sentence select {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 1em;
+    color: #333;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.options-sentence select:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.options-sentence select:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Mobile adjustments for options */
+@media (max-width: 768px) {
+    .options-sentence {
+        font-size: 1.1em;
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .options-sentence select {
+        padding: 4px 8px;
+    }
+
+    .sentence-line {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 360px) {
+    .options-sentence {
+        font-size: 1em;
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .sentence-line {
+        font-size: 1em;
+    }
+}
+
+/* Mobile adjustments for result section */
+@media (max-width: 768px) {
     #result {
         padding: 15px;
     }
 
-    .option-section,
-    .example-section {
-        padding: 12px;
-        margin: 12px 0;
+    #result .history-row {
+        padding: 10px 12px;
     }
 
-    .radio-group-container,
-    .example-guess,
-    .example-explanation {
-        padding-left: 20px;
-        width: calc(100% - 20px);
+    #result .guess-value {
+        font-size: 1.1em;
+        letter-spacing: 2px;
+    }
+
+    #result .guess-result {
+        font-size: 0.85em;
+    }
+}
+
+.keyboard-row.attempts-row {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    padding: 8px;
+}
+
+.keyboard-row .attempts-info {
+    width: 100%;
+    text-align: center;
+    font-style: italic;
+    color: #333;
+    font-size: 0.95em;
+    font-family: monospace;
+    margin: 0;
+}
+
+/* Remove old attempts-info styles */
+#result .attempts-info {
+    display: none;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .keyboard-row.attempts-row {
+        margin-bottom: 10px;
+        padding: 6px;
+    }
+
+    .keyboard-row .attempts-info {
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 360px) {
+    .keyboard-row.attempts-row {
+        margin-bottom: 8px;
+        padding: 5px;
     }
 }

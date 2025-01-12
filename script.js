@@ -13,6 +13,7 @@ let isNumberOfDay = false;
 let lastCheckedDate;
 let dailyMode = 'non-repeatable'; // Can be 'non-repeatable' or 'repeatable'
 let currentGuess = '';
+let lastGuessResult = ''; // Add this at the top with other variables
 
 const placeholderHTML = `
     <h3>Guess History</h3>
@@ -34,9 +35,14 @@ function startNewGame() {
     guessResult = null;
     guessResultEnd = null;
     currentGuess = '';
+    lastGuessResult = ''; // Clear last guess result on new game
+
+    // Update attempts display in keyboard
+    const attemptsText = maxAttempts === 1 ? 'attempt' : 'attempts';
+    document.querySelector('.attempts-info').textContent = `${maxAttempts} ${attemptsText} remaining`;
 
     // Clear results and show initial state
-    document.getElementById('result').innerHTML = '';  // This will show the empty state with underscores
+    document.getElementById('result').innerHTML = '';
     document.getElementById('guess-history').innerHTML = placeholderHTML;
 
     // Generate new secret code based on current settings
@@ -175,6 +181,12 @@ function checkGuess() {
 
     // Increment attempts before pushing to guesses array
     attempts++;
+    
+    // Update attempts remaining display immediately
+    const remainingAttempts = maxAttempts - attempts;
+    const attemptsText = remainingAttempts === 1 ? 'attempt' : 'attempts';
+    document.querySelector('.attempts-info').textContent = `${remainingAttempts} ${attemptsText} remaining`;
+
     guesses.push({ guess: guess, bulls: bulls, cows: cows });
     updateGuessHistory();
 
@@ -186,34 +198,30 @@ function checkGuess() {
         end = true;
         updateGuessHistory();
         document.getElementById('result').innerHTML = '<span class="blink-green">Congratulations! You guessed the secret code!</span>';
+        lastGuessResult = ''; // Clear last guess on win
         scrollToResult();
     } else if (attempts >= maxAttempts) {
         end = true;
         updateGuessHistory();
         const gameOverMessage = '<span class="blink-red">Game Over! </span><span class="blink-purple">You have used all attempts. The secret code was </span><span class="blink-blue">' + secretCode + '</span>';
         document.getElementById('result').innerHTML = gameOverMessage;
+        lastGuessResult = ''; // Clear last guess on game over
         scrollToResult();
     } else {
-        // Show latest guess and remaining attempts
-        const remainingAttempts = maxAttempts - attempts;
-        const attemptsText = remainingAttempts === 1 ? 'attempt' : 'attempts';
-        const resultHTML = `
-            <div class="result-container">
+        // Store and show latest guess
+        lastGuessResult = `
+            <div class="history-row">
+                <span class="guess-number">${attempts}</span>
                 <div class="guess-content">
-                    <span class="guess-number">${attempts}</span>
                     <span class="guess-value">${guess}</span>
-                    <span>→</span>
                     <div class="guess-result">
                         <span>Bulls: <span class="green">${bulls}</span></span>
                         <span>Cows: <span class="orange">${cows}</span></span>
                     </div>
                 </div>
-                <div class="attempts-info">
-                    ${remainingAttempts} ${attemptsText} remaining
-                </div>
             </div>
         `;
-        document.getElementById('result').innerHTML = resultHTML;
+        document.getElementById('result').innerHTML = lastGuessResult;
         keepKeyboardVisible();
     }
 }
@@ -300,28 +308,23 @@ function updateCurrentGuessDisplay() {
     const remainingAttempts = maxAttempts - attempts;
     const attemptsText = remainingAttempts === 1 ? 'attempt' : 'attempts';
     
+    // Update the attempts info in the keyboard
+    document.querySelector('.attempts-info').textContent = `${remainingAttempts} ${attemptsText} remaining`;
+    
     if (currentGuess === '') {
-        // Show only remaining attempts when no current guess
-        document.getElementById('result').innerHTML = `
-            <div class="attempts-info">
-                ${remainingAttempts} ${attemptsText} remaining
-            </div>
-        `;
+        // Show last guess result if available, otherwise empty
+        document.getElementById('result').innerHTML = lastGuessResult;
     } else {
-        // Show both current guess and remaining attempts
+        // Show current guess input
         const resultHTML = `
-            <div class="result-container">
+            <div class="history-row">
+                <span class="guess-number">${attempts + 1}</span>
                 <div class="guess-content">
-                    <span class="guess-number">${attempts + 1}</span>
                     <span class="guess-value">${currentGuess.padEnd(gameLength, '_')}</span>
-                    <span>→</span>
                     <div class="guess-result">
                         <span>Bulls: <span class="green">?</span></span>
                         <span>Cows: <span class="orange">?</span></span>
                     </div>
-                </div>
-                <div class="attempts-info">
-                    ${remainingAttempts} ${attemptsText} remaining
                 </div>
             </div>
         `;

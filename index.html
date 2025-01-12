@@ -23,56 +23,34 @@
                 <!-- Left side: Options, Game Controls, Guess History, and Result -->
                 <aside class="left-panel" role="complementary">
                     <section id="options" aria-labelledby="options-heading">
-                        <h2 id="options-heading" class="visually-hidden">Game Options</h2>
-                        
-                        <!-- Daily Number Option -->
-                        <div class="checkbox-group standalone">
-                            <input type="checkbox" id="number-of-day" onclick="toggleDailyNumber()">
-                            <label for="number-of-day">Secret of The Day</label>
-                            <span class="utc-note" aria-label="Resets at midnight UTC">(resets at 00:00 UTC)</span>
-                        </div>
-
-                        <!-- Secret Type Section -->
-                        <div class="option-section">
-                            <h3 class="option-title">Secret Type</h3>
-                            <div class="radio-group-container">
-                                <div class="radio-group">
-                                    <input type="radio" id="non-repeatable-secret" name="secret-type" 
-                                           value="non-repeatable" onclick="toggleSecretType()" checked>
-                                    <label for="non-repeatable-secret">Non-Repeating</label>
-                                </div>
-                                <div class="radio-group">
-                                    <input type="radio" id="repeatable-secret" name="secret-type" 
-                                           value="repeatable" onclick="toggleSecretType()">
-                                    <label for="repeatable-secret">Repeating</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Play With Section -->
-                        <div class="option-section">
-                            <h3 class="option-title">Play With</h3>
-                            <div class="radio-group-container">
-                                <div class="radio-group">
-                                    <input type="radio" id="four-digits" name="game-length" 
-                                           value="4" onclick="toggleGameLength()" checked>
-                                    <label for="four-digits">4 Digits</label>
-                                </div>
-                                <div class="radio-group">
-                                    <input type="radio" id="five-digits" name="game-length" 
-                                           value="5" onclick="toggleGameLength()">
-                                    <label for="five-digits">5 Digits</label>
-                                </div>
+                        <h2 id="options-heading">Options</h2>
+                        <div class="options-sentence">
+                            <div class="sentence-line">I want to crack</div>
+                            <div class="sentence-line">
+                                the 
+                                <select id="number-of-day" onchange="toggleDailyNumber()">
+                                    <option value="normal">Normal</option>
+                                    <option value="daily">Today's</option>
+                                </select>
+                                <select id="secret-type" onchange="toggleSecretType()">
+                                    <option value="non-repeatable">Non-Repeatable</option>
+                                    <option value="repeatable">Repeatable</option>
+                                </select>
+                                -
+                                <select id="game-length" onchange="toggleGameLength()">
+                                    <option value="4">4-digit</option>
+                                    <option value="5">5-digit</option>
+                                </select>
+                                secret!
                             </div>
                         </div>
                     </section>
 
                     <!-- Game Examples -->
                     <section id="game-examples" aria-labelledby="examples-heading">
-                        <h2 id="examples-heading" class="visually-hidden">Game Examples</h2>
+                        <h2 id="examples-heading">Examples</h2>
                         <div class="example-section">
-                            <p><u>Example:</u></p>
-                            <p> 4 Digits - If Secret code is 1234</p>
+                            <p>4 Digits - If Secret code is 1234</p>
                             <div class="example-guess">
                                 <span>Guess: 5<span style="color: blue">2</span><span style="color: purple">4</span><span style="color: purple">1</span></span>
                                 <span class="example-result">→ <span style="color: blue">1</span> Bull, <span style="color: purple">2</span> Cows</span>
@@ -82,8 +60,7 @@
                                 <div>• <span style="color: purple">1</span> and <span style="color: purple">4</span> exists but wrong position (<span style="color: purple">purple</span>)</div>
                                 <div>• <span class="unmatched">5</span> is not in the Secret code</div>
                             </div>
-                            <p> </p>
-                            <p> 5 Digits - If Secret code is 12345</p>
+                            <p>5 Digits - If Secret code is 12345</p>
                             <div class="example-guess">
                                 <span>Guess: 6<span style="color: blue">2</span><span style="color: purple">4</span>7<span style="color: blue">5</span></span>
                                 <span class="example-result">→ <span style="color: blue">2</span> Bulls, <span style="color: purple">1</span> Cow</span>
@@ -105,11 +82,7 @@
                     </section>
 
                     <div id="user-input" role="form" aria-label="Game input">
-                        <div class="button-group">
-                            <button id="new-game-button" 
-                                    onclick="confirmNewGame()" 
-                                    aria-label="Start a new game">New Game</button>
-                        </div>
+                        <!-- Removed button-group and new-game-button from here -->
                     </div>
 
                     <!-- Result section -->
@@ -119,6 +92,9 @@
                          role="group" 
                          aria-label="Virtual keyboard"
                          class="virtual-keyboard">
+                        <div class="keyboard-row attempts-row">
+                            <div class="attempts-info">11 attempts remaining</div>
+                        </div>
                         <div class="keyboard-row">
                             <button class="key-btn" data-key="1" aria-label="Number 1">1</button>
                             <button class="key-btn" data-key="2" aria-label="Number 2">2</button>
@@ -134,8 +110,9 @@
                             <button class="key-btn" data-key="0" aria-label="Number 0">0</button>
                         </div>
                         <div class="keyboard-row">
-                            <button class="key-btn wide-btn" data-action="backspace" aria-label="Backspace">⌫</button>
+                            <button class="key-btn wide-btn" data-action="new-game" onclick="confirmNewGame()" aria-label="New Game">New Game</button>
                             <button class="key-btn wide-btn" data-action="clear" aria-label="Clear input">Clear</button>
+                            <button class="key-btn wide-btn" data-action="backspace" aria-label="Backspace">⌫</button>
                             <button class="key-btn wide-btn" data-action="enter" aria-label="Enter guess">Guess</button>
                         </div>
                     </div>
