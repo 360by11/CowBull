@@ -7,8 +7,6 @@ let guesses = [];
 let repeatableSecret = false;
 let gameLength = 4; // Default to 4 digits
 let end = false;
-let guessResult = null;
-let guessResultEnd = null;
 let isNumberOfDay = false;
 let lastCheckedDate;
 let dailyMode = 'non-repeatable'; // Can be 'non-repeatable' or 'repeatable'
@@ -27,23 +25,43 @@ const placeholderHTML = `
     </div>
 `;
 
+function updateMaxAttempts() {
+    maxAttempts = gameLength === 4 ? maxAttemptsFour : maxAttemptsFive;
+    const attemptsText = maxAttempts === 1 ? 'attempt' : 'attempts';
+    document.querySelector('.attempts-info').textContent = `${maxAttempts} ${attemptsText} remaining`;
+}
+
+function handleGameLengthChange(length) {
+    // Skip confirmation if game is over or no attempts made
+    if (attempts > 0 && !end) {
+        if (!confirm('Changing game length will start a new game. Current progress will be lost. Continue?')) {
+            // If user cancels, revert the select to current gameLength
+            document.querySelector('select[onchange*="handleGameLengthChange"]').value = gameLength;
+            return;
+        }
+    }
+    gameLength = parseInt(length);
+    updateMaxAttempts();
+    startNewGame();
+}
+
 function startNewGame() {
     // Reset game state
     attempts = 0;
     guesses = [];
     end = false;
-    guessResult = null;
-    guessResultEnd = null;
     currentGuess = '';
-    lastGuessResult = ''; // Clear last guess result on new game
+    lastGuessResult = '';
 
-    // Update attempts display in keyboard
-    const attemptsText = maxAttempts === 1 ? 'attempt' : 'attempts';
-    document.querySelector('.attempts-info').textContent = `${maxAttempts} ${attemptsText} remaining`;
+    // Enable keyboard
+    enableKeyboard();
+
+    // Update max attempts based on game length
+    updateMaxAttempts();
 
     // Clear results and show initial state
-    document.getElementById('result').innerHTML = '';
-    document.getElementById('guess-history').innerHTML = placeholderHTML;
+    document.getElementById('keyboard-result').innerHTML = '';
+    updateGuessHistory(); // This will now show the placeholder text
 
     // Generate new secret code based on current settings
     if (isNumberOfDay) {
@@ -54,35 +72,20 @@ function startNewGame() {
         const modeText = repeatableSecret ? "Repeatable" : "Non-Repeatable";
         alert(`Generating ${modeText} ${gameLength} digit secret...`);
         if (repeatableSecret) {
-            startGame(gameLength);
+            secretCode = generateSecretCode(gameLength);
         } else {
-            startGameWithNonRepeatableSecret(gameLength);
+            const numbers = Array.from({ length: 10 }, (v, k) => k);
+            const shuffledNumbers = shuffleArray(numbers);
+            secretCode = shuffledNumbers.slice(0, gameLength).join('');
         }
     }
 
     // Update the result display with empty state
     updateCurrentGuessDisplay();
     console.log('Secret Code:', secretCode);
-}
 
-function startGame(digits) {
-    secretCode = generateSecretCode(digits);
-    attempts = 0;
-    guesses = [];
-    document.getElementById('result').innerHTML = '';
-    document.getElementById('guess-history').innerHTML = placeholderHTML;
-    console.log('Secret Code:', secretCode);
-}
-
-function startGameWithNonRepeatableSecret(digits) {
-    const numbers = Array.from({ length: 10 }, (v, k) => k);
-    const shuffledNumbers = shuffleArray(numbers);
-    secretCode = shuffledNumbers.slice(0, digits).join('');
-    attempts = 0;
-    guesses = [];
-    document.getElementById('result').innerHTML = '';
-    document.getElementById('guess-history').innerHTML = placeholderHTML;
-    console.log('Secret Code:', secretCode);
+    // Switch to history tab when starting new game
+    switchTab('history');
 }
 
 function generateSecretCode(digits) {
@@ -110,29 +113,16 @@ function shuffleArray(array) {
 }
 
 function toggleSecretType() {
+    // Skip confirmation if game is over or no attempts made
+    if (attempts > 0 && !end) {
+        if (!confirm('Changing secret type will start a new game. Current progress will be lost. Continue?')) {
+            // If user cancels, revert the checkbox to current repeatableSecret state
+            document.getElementById('repeatable-secret').checked = repeatableSecret;
+            return;
+        }
+    }
     const repeatable = document.getElementById('repeatable-secret');
     repeatableSecret = repeatable.checked;
-    
-    // Start a new game with current settings
-    startNewGame();
-}
-
-function toggleGameLength() {
-    const fourDigits = document.getElementById('four-digits');
-    
-    if (fourDigits.checked) {
-        gameLength = 4;
-        maxAttempts = maxAttemptsFour;
-    } else {
-        gameLength = 5;
-        maxAttempts = maxAttemptsFive;
-    }
-    
-    // Update the current display before starting new game
-    currentGuess = '';
-    updateCurrentGuessDisplay();
-    
-    // Restart the game with the new settings
     startNewGame();
 }
 
@@ -197,18 +187,17 @@ function checkGuess() {
     if (bulls === secretCode.length) {
         end = true;
         updateGuessHistory();
-        document.getElementById('result').innerHTML = '<span class="blink-green">Congratulations! You guessed the secret code!</span>';
-        lastGuessResult = ''; // Clear last guess on win
-        scrollToResult();
+        document.getElementById('keyboard-result').innerHTML = '<span class="blink-green">Congratulations! You guessed the secret code!</span>';
+        lastGuessResult = '';
+        disableKeyboardAfterGameOver();
     } else if (attempts >= maxAttempts) {
         end = true;
         updateGuessHistory();
         const gameOverMessage = '<span class="blink-red">Game Over! </span><span class="blink-purple">You have used all attempts. The secret code was </span><span class="blink-blue">' + secretCode + '</span>';
-        document.getElementById('result').innerHTML = gameOverMessage;
-        lastGuessResult = ''; // Clear last guess on game over
-        scrollToResult();
+        document.getElementById('keyboard-result').innerHTML = gameOverMessage;
+        lastGuessResult = '';
+        disableKeyboardAfterGameOver();
     } else {
-        // Store and show latest guess
         lastGuessResult = `
             <div class="history-row">
                 <span class="guess-number">${attempts}</span>
@@ -221,9 +210,12 @@ function checkGuess() {
                 </div>
             </div>
         `;
-        document.getElementById('result').innerHTML = lastGuessResult;
+        document.getElementById('keyboard-result').innerHTML = lastGuessResult;
         keepKeyboardVisible();
     }
+
+    // Always switch to history tab after a guess
+    switchTab('history');
 }
 
 function isNonRepeating(number) {
@@ -231,57 +223,63 @@ function isNonRepeating(number) {
 }
 
 function updateGuessHistory() {
-    const historyDiv = document.getElementById('guess-history');
+    const historyContent = document.querySelector('#history-tab .history-content');
     
     if (guesses.length === 0) {
-        // Show placeholder when there are no guesses
-        historyDiv.innerHTML = placeholderHTML;
-        historyDiv.classList.remove('scrollable');  // Remove scrollable class
+        historyContent.innerHTML = `
+            <div class="placeholder-text">
+                Your guesses will appear here...
+                <ul>
+                    <li>Each guess will show Bulls (correct position) in <span style="color: blue">blue</span></li>
+                    <li>And Cows (correct number, wrong position) in <span style="color: purple">purple</span></li>
+                    <li>The Color codes are disabled during the Game and only be revealed when the Game is over!!!</li>
+                </ul>
+            </div>
+        `;
         return;
     }
 
-    // Add scrollable class when game starts
-    historyDiv.classList.add('scrollable');
-
-    historyDiv.innerHTML = `
-        <h3>Guess History</h3>
-        <div class="history-content">
-            ${guesses.map((guess, index) => {
-                let guessValue = '';
-                
-                if (end) {
-                    // Color code each digit when game ends
-                    for (let i = 0; i < guess.guess.length; i++) {
-                        if (guess.guess[i] === secretCode[i]) {
-                            guessValue += `<span class="green">${guess.guess[i]}</span>`;
-                        } else if (secretCode.includes(guess.guess[i])) {
-                            guessValue += `<span class="orange">${guess.guess[i]}</span>`;
-                        } else {
-                            guessValue += guess.guess[i];
-                        }
-                    }
+    // Build the guess history HTML
+    const historyHTML = guesses.map((guess, index) => {
+        let guessValue = '';
+        
+        if (end) {
+            for (let i = 0; i < guess.guess.length; i++) {
+                if (guess.guess[i] === secretCode[i]) {
+                    guessValue += `<span class="green">${guess.guess[i]}</span>`;
+                } else if (secretCode.includes(guess.guess[i])) {
+                    guessValue += `<span class="orange">${guess.guess[i]}</span>`;
                 } else {
-                    guessValue = guess.guess;
+                    guessValue += guess.guess[i];
                 }
+            }
+        } else {
+            guessValue = guess.guess;
+        }
 
-                return `
-                    <div class="history-row">
-                        <span class="guess-number">${index + 1}.</span>
-                        <div class="guess-content">
-                            <span class="guess-value">${guessValue}</span>
-                            <div class="guess-result">
-                                <span>Bulls: <span class="green">${guess.bulls}</span></span>
-                                <span>Cows: <span class="orange">${guess.cows}</span></span>
-                            </div>
-                        </div>
-                    </div>`;
-            }).join('')}
-        </div>
-    `;
+        return `
+            <div class="history-row">
+                <span class="guess-number">${index + 1}</span>
+                <div class="guess-content">
+                    <span class="guess-value">${guessValue}</span>
+                    <div class="guess-result">
+                        <span>Bulls: <span class="green">${guess.bulls}</span></span>
+                        <span>Cows: <span class="orange">${guess.cows}</span></span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
 
-    // Scroll to the latest guess
-    const historyContent = historyDiv.querySelector('.history-content');
-    historyContent.scrollTop = historyContent.scrollHeight;
+    historyContent.innerHTML = historyHTML;
+
+    // Smooth scroll to bottom with mobile support
+    setTimeout(() => {
+        historyContent.scrollTo({
+            top: historyContent.scrollHeight,
+            behavior: 'smooth'
+        });
+    }, 100);
 }
 
 function appendNumber(num) {
@@ -312,15 +310,34 @@ function updateCurrentGuessDisplay() {
     document.querySelector('.attempts-info').textContent = `${remainingAttempts} ${attemptsText} remaining`;
     
     if (currentGuess === '') {
-        // Show last guess result if available, otherwise empty
-        document.getElementById('result').innerHTML = lastGuessResult;
+        if (lastGuessResult) {
+            // Show last guess result if available
+            document.getElementById('keyboard-result').innerHTML = lastGuessResult;
+        } else {
+            // Show initial prompt with correct number of underscores
+            const underscores = Array(gameLength).fill('_').join(' ');
+            const resultHTML = `
+                <div class="history-row">
+                    <span class="guess-number">1</span>
+                    <div class="guess-content">
+                        <span class="guess-value">Your Guess? ${underscores}</span>
+                        <div class="guess-result">
+                            <span>Bulls: <span class="green">?</span></span>
+                            <span>Cows: <span class="orange">?</span></span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('keyboard-result').innerHTML = resultHTML;
+        }
     } else {
-        // Show current guess input
+        // Show current guess input with proper spacing
+        const paddedGuess = currentGuess.split('').join(' ').padEnd(gameLength * 2 - 1, ' _');
         const resultHTML = `
             <div class="history-row">
                 <span class="guess-number">${attempts + 1}</span>
                 <div class="guess-content">
-                    <span class="guess-value">${currentGuess.padEnd(gameLength, '_')}</span>
+                    <span class="guess-value">${paddedGuess}</span>
                     <div class="guess-result">
                         <span>Bulls: <span class="green">?</span></span>
                         <span>Cows: <span class="orange">?</span></span>
@@ -328,7 +345,7 @@ function updateCurrentGuessDisplay() {
                 </div>
             </div>
         `;
-        document.getElementById('result').innerHTML = resultHTML;
+        document.getElementById('keyboard-result').innerHTML = resultHTML;
     }
 }
 
@@ -346,30 +363,43 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// Update the keyboard event handling to prevent double inputs
+// Update the keyboard event handling
 document.getElementById('virtual-keyboard').addEventListener('click', (e) => {
-    // Prevent click events on touch devices
-    if (window.matchMedia('(pointer: coarse)').matches) {
-        return;
-    }
-
     const button = e.target.closest('.key-btn');
-    if (!button) return;
-
+    if (!button || button.disabled) return;
     handleKeyPress(button);
 });
 
-// Separate touch event handler
+// Separate touch event handler for mobile
 document.getElementById('virtual-keyboard').addEventListener('touchend', (e) => {
-    e.preventDefault(); // Prevent default to avoid any click events
+    e.preventDefault();
     const button = e.target.closest('.key-btn');
-    if (!button) return;
+    if (!button || button.disabled) return;
+    
+    // Add visual feedback for touch
+    button.style.opacity = '0.7';
+    setTimeout(() => {
+        button.style.opacity = button.disabled ? '0.5' : '1';
+    }, 100);
 
     handleKeyPress(button);
 }, { passive: false });
 
-// Common function to handle key presses
+// Update select handlers for mobile
+const selectElements = document.querySelectorAll('select');
+selectElements.forEach(select => {
+    select.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        select.focus();
+    }, { passive: false });
+});
+
+// Common function to handle key presses with mobile support
 function handleKeyPress(button) {
+    if (end && !button.dataset.action?.includes('new-game')) {
+        return; // Prevent all actions except new game when game is over
+    }
+
     if (button.dataset.key) {
         appendNumber(button.dataset.key);
     } else if (button.dataset.action) {
@@ -382,6 +412,9 @@ function handleKeyPress(button) {
                 break;
             case 'enter':
                 checkGuess();
+                break;
+            case 'new-game':
+                confirmNewGame();
                 break;
         }
     }
@@ -398,6 +431,13 @@ document.addEventListener('touchstart', function(e) {
 document.addEventListener('dblclick', function(e) {
     e.preventDefault();
 });
+
+// Prevent pinch zoom
+document.addEventListener('touchmove', function(e) {
+    if (e.touches.length > 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
 
 function generateDailyNumber(digits, repeatable) {
     // Get current UTC date as string (YYYY-MM-DD)
@@ -496,37 +536,65 @@ function confirmNewGame() {
     }
 }
 
-function updateResult(guess, bulls, cows) {
-    const resultHTML = `
-        <div class="guess-content">
-            <span class="guess-value">${guess}</span>
-            <span>→</span>
-            <div class="guess-result">
-                <span>Bulls: <span class="green">${bulls}</span></span>
-                <span>Cows: <span class="orange">${cows}</span></span>
-            </div>
-        </div>
-    `;
-    document.getElementById('result').innerHTML = resultHTML;
-}
-
 function toggleDailyNumber() {
+    // Skip confirmation if game is over or no attempts made
+    if (attempts > 0 && !end) {
+        if (!confirm('Changing to daily number will start a new game. Current progress will be lost. Continue?')) {
+            // If user cancels, revert the checkbox to current isNumberOfDay state
+            document.getElementById('number-of-day').checked = isNumberOfDay;
+            return;
+        }
+    }
     const dailyCheckbox = document.getElementById('number-of-day');
     isNumberOfDay = dailyCheckbox.checked;
-    
-    // Start a new game with current settings
     startNewGame();
-}
-
-// Add this function to handle scrolling to result
-function scrollToResult() {
-    if (end) {
-        const resultElement = document.getElementById('result');
-        resultElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
 }
 
 // Add new function to keep keyboard in view
 function keepKeyboardVisible() {
     // Do nothing - keyboard is now fixed
+}
+
+function disableKeyboardAfterGameOver() {
+    // Disable all number keys
+    const numberKeys = document.querySelectorAll('.key-btn[data-key]');
+    numberKeys.forEach(key => {
+        key.disabled = true;
+        key.style.opacity = '0.5';
+        key.style.cursor = 'not-allowed';
+    });
+
+    // Disable Backspace, Clear, and Guess buttons
+    const actionButtons = document.querySelectorAll('.key-btn[data-action]:not([data-action="new-game"])');
+    actionButtons.forEach(button => {
+        button.disabled = true;
+        button.style.opacity = '0.5';
+        button.style.cursor = 'not-allowed';
+    });
+}
+
+function enableKeyboard() {
+    // Re-enable all keys
+    const allKeys = document.querySelectorAll('.key-btn');
+    allKeys.forEach(key => {
+        key.disabled = false;
+        key.style.opacity = '1';
+        key.style.cursor = 'pointer';
+    });
+}
+
+function switchTab(tabName) {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(button => {
+        button.classList.remove('active');
+        if (button.textContent.toLowerCase().includes(tabName)) {
+            button.classList.add('active');
+        }
+    });
+
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    tabPanels.forEach(panel => {
+        panel.classList.remove('active');
+    });
+    document.getElementById(`${tabName}-tab`).classList.add('active');
 }
