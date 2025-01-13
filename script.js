@@ -259,27 +259,36 @@ function updateGuessHistory() {
     guesses.forEach((guess, index) => {
         const guessValue = end ? formatGuessWithColors(guess) : guess.guess;
         guessesHTML += `
-                    <div class="history-row">
+            <div class="history-row">
                 <div class="guess-number">${index + 1}</div>
-                        <div class="guess-content">
+                <div class="guess-content">
                     <div class="guess-value">${guessValue}</div>
-                            <div class="guess-result">
+                    <div class="guess-result">
                         <span>Bulls: <span class="${end ? 'blue' : 'green'}">${guess.bulls}</span></span>
                         <span>Cows: <span class="${end ? 'purple' : 'orange'}">${guess.cows}</span></span>
-                            </div>
-                        </div>
-        </div>
-    `;
+                    </div>
+                </div>
+            </div>
+        `;
     });
     historyContent.innerHTML = guessesHTML;
 
-    // Scroll guess history to bottom with a small delay to ensure content is rendered
-    setTimeout(() => {
-        historyContent.scrollTo({
-            top: historyContent.scrollHeight,
-            behavior: 'smooth'
-        });
-    }, 100);
+    // Switch to history tab after each guess
+    switchTab('history');
+
+    // Force scroll to bottom after content update
+    const scrollToBottom = () => {
+        const historyTab = document.querySelector('#history-tab .history-content');
+        if (historyTab) {
+            const scrollHeight = historyTab.scrollHeight;
+            historyTab.scrollTop = scrollHeight;
+        }
+    };
+
+    // Execute scroll multiple times to ensure it works
+    scrollToBottom();
+    setTimeout(scrollToBottom, 50);
+    setTimeout(scrollToBottom, 150);
 }
 
 function appendNumber(num) {
@@ -625,6 +634,22 @@ function switchTab(tabName) {
     // Add active class to selected tab and panel
     document.querySelector(`.tab-btn[onclick*="${tabName}"]`).classList.add('active');
     document.getElementById(`${tabName}-tab`).classList.add('active');
+
+    // If switching to history tab and there are guesses, scroll to bottom
+    if (tabName === 'history' && guesses.length > 0) {
+        const scrollToBottom = () => {
+            const historyContent = document.querySelector('#history-tab .history-content');
+            if (historyContent) {
+                const scrollHeight = historyContent.scrollHeight;
+                historyContent.scrollTop = scrollHeight;
+            }
+        };
+
+        // Execute scroll multiple times to ensure it works
+        scrollToBottom();
+        setTimeout(scrollToBottom, 50);
+        setTimeout(scrollToBottom, 150);
+    }
 }
 
 // Add this function to format guesses with colors when game ends
