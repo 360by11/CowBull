@@ -14,7 +14,6 @@ let currentGuess = '';
 let lastGuessResult = ''; // Add this at the top with other variables
 
 const placeholderHTML = `
-    <h3>Guess History</h3>
     <div class="placeholder-text">
         Your guesses will appear here...
         <ul>
@@ -32,6 +31,14 @@ function updateMaxAttempts() {
 }
 
 function handleGameLengthChange(length) {
+    // Convert length to number for comparison
+    const newLength = parseInt(length);
+    
+    // If length hasn't actually changed, do nothing
+    if (newLength === gameLength) {
+        return;
+    }
+
     // Skip confirmation if game is over or no attempts made
     if (attempts > 0 && !end) {
         if (!confirm('Changing game length will start a new game. Current progress will be lost. Continue?')) {
@@ -40,7 +47,7 @@ function handleGameLengthChange(length) {
             return;
         }
     }
-    gameLength = parseInt(length);
+    gameLength = newLength;
     updateMaxAttempts();
     startNewGame();
 }
@@ -63,15 +70,21 @@ function startNewGame() {
     document.getElementById('keyboard-result').innerHTML = '';
     updateGuessHistory(); // This will now show the placeholder text
 
+    // Get current game mode and secret type
+    const gameMode = document.getElementById('game-mode').value;
+    const secretType = document.getElementById('secret-type').value;
+
     // Generate new secret code based on current settings
-    if (isNumberOfDay) {
-        const modeText = repeatableSecret ? "Repeatable" : "Non-Repeatable";
-        alert(`Loading ${modeText} Secret of The Day (${gameLength} digits)...`);
-        secretCode = generateDailyNumber(gameLength, repeatableSecret);
+    if (gameMode === 'daily') {
+        const modeText = secretType === 'repeatable' ? "Repeatable" : "Non-Repeatable";
+        const lengthText = gameLength === 4 ? "4-digit" : "5-digit";
+        alert(`Loading Today's ${modeText} ${lengthText} Secret...`);
+        secretCode = generateDailyNumber(gameLength, secretType === 'repeatable');
     } else {
-        const modeText = repeatableSecret ? "Repeatable" : "Non-Repeatable";
-        alert(`Generating ${modeText} ${gameLength} digit secret...`);
-        if (repeatableSecret) {
+        const modeText = secretType === 'repeatable' ? "Repeatable" : "Non-Repeatable";
+        const lengthText = gameLength === 4 ? "4-digit" : "5-digit";
+        alert(`Generating ${modeText} ${lengthText} Secret...`);
+        if (secretType === 'repeatable') {
             secretCode = generateSecretCode(gameLength);
         } else {
             const numbers = Array.from({ length: 10 }, (v, k) => k);
@@ -116,13 +129,13 @@ function toggleSecretType() {
     // Skip confirmation if game is over or no attempts made
     if (attempts > 0 && !end) {
         if (!confirm('Changing secret type will start a new game. Current progress will be lost. Continue?')) {
-            // If user cancels, revert the checkbox to current repeatableSecret state
-            document.getElementById('repeatable-secret').checked = repeatableSecret;
+            // If user cancels, revert the select to current type
+            document.getElementById('secret-type').value = repeatableSecret ? 'repeatable' : 'non-repeatable';
             return;
         }
     }
-    const repeatable = document.getElementById('repeatable-secret');
-    repeatableSecret = repeatable.checked;
+    const typeSelect = document.getElementById('secret-type');
+    repeatableSecret = typeSelect.value === 'repeatable';
     startNewGame();
 }
 
@@ -132,12 +145,6 @@ function checkGuess() {
     // Add validation for empty guess
     if (!guess) {
         alert('Please enter a guess first.');
-        return;
-    }
-
-    // Check if maximum attempts reached
-    if (attempts >= maxAttempts) {
-        alert('You have reached the maximum number of attempts.');
         return;
     }
 
@@ -186,17 +193,33 @@ function checkGuess() {
     // Game over conditions
     if (bulls === secretCode.length) {
         end = true;
-        updateGuessHistory();
-        document.getElementById('keyboard-result').innerHTML = '<span class="blink-green">Congratulations! You guessed the secret code!</span>';
+        const winMessage = `<div class="history-row"><div class="guess-content"><div class="guess-value"><span class="blink-green">Congratulations! You Cracked the Secret!!!!</span></div></div></div>`;
+        document.getElementById('keyboard-result').innerHTML = winMessage;
         lastGuessResult = '';
         disableKeyboardAfterGameOver();
+        updateGuessHistory(); // Update history with colors after setting end = true
     } else if (attempts >= maxAttempts) {
         end = true;
-        updateGuessHistory();
-        const gameOverMessage = '<span class="blink-red">Game Over! </span><span class="blink-purple">You have used all attempts. The secret code was </span><span class="blink-blue">' + secretCode + '</span>';
-        document.getElementById('keyboard-result').innerHTML = gameOverMessage;
+        const gameMode = document.getElementById('game-mode').value;
+        const loseMessage = gameMode === 'daily' ? 
+            `<div class="history-row">
+                <div class="guess-content">
+                    <div class="guess-value">
+                        <span class="blink-purple">No! :( Hope You Crack it before today 23:59:59 UTC</span>
+                    </div>
+                </div>
+            </div>` :
+            `<div class="history-row">
+                <div class="guess-content">
+                    <div class="guess-value">
+                        <span class="blink-purple">Game Over! The Secret was : ${secretCode}</span>
+                    </div>
+                </div>
+            </div>`;
+        document.getElementById('keyboard-result').innerHTML = loseMessage;
         lastGuessResult = '';
         disableKeyboardAfterGameOver();
+        updateGuessHistory(); // Update history with colors after setting end = true
     } else {
         lastGuessResult = `
             <div class="history-row">
@@ -204,14 +227,15 @@ function checkGuess() {
                 <div class="guess-content">
                     <span class="guess-value">${guess}</span>
                     <div class="guess-result">
-                        <span>Bulls: <span class="green">${bulls}</span></span>
-                        <span>Cows: <span class="orange">${cows}</span></span>
+                        <span>Bulls: <span class="blue">${bulls}</span></span>
+                        <span>Cows: <span class="purple">${cows}</span></span>
                     </div>
                 </div>
             </div>
         `;
         document.getElementById('keyboard-result').innerHTML = lastGuessResult;
         keepKeyboardVisible();
+        updateGuessHistory();
     }
 
     // Always switch to history tab after a guess
@@ -224,56 +248,32 @@ function isNonRepeating(number) {
 
 function updateGuessHistory() {
     const historyContent = document.querySelector('#history-tab .history-content');
+    if (!historyContent) return;
     
     if (guesses.length === 0) {
-        historyContent.innerHTML = `
-            <div class="placeholder-text">
-                Your guesses will appear here...
-                <ul>
-                    <li>Each guess will show Bulls (correct position) in <span style="color: blue">blue</span></li>
-                    <li>And Cows (correct number, wrong position) in <span style="color: purple">purple</span></li>
-                    <li>The Color codes are disabled during the Game and only be revealed when the Game is over!!!</li>
-                </ul>
-            </div>
-        `;
+        historyContent.innerHTML = placeholderHTML;
         return;
     }
 
-    // Build the guess history HTML
-    const historyHTML = guesses.map((guess, index) => {
-        let guessValue = '';
-        
-        if (end) {
-            for (let i = 0; i < guess.guess.length; i++) {
-                if (guess.guess[i] === secretCode[i]) {
-                    guessValue += `<span class="green">${guess.guess[i]}</span>`;
-                } else if (secretCode.includes(guess.guess[i])) {
-                    guessValue += `<span class="orange">${guess.guess[i]}</span>`;
-                } else {
-                    guessValue += guess.guess[i];
-                }
-            }
-        } else {
-            guessValue = guess.guess;
-        }
+    let guessesHTML = '';
+    guesses.forEach((guess, index) => {
+        const guessValue = end ? formatGuessWithColors(guess) : guess.guess;
+        guessesHTML += `
+                    <div class="history-row">
+                <div class="guess-number">${index + 1}</div>
+                        <div class="guess-content">
+                    <div class="guess-value">${guessValue}</div>
+                            <div class="guess-result">
+                        <span>Bulls: <span class="${end ? 'blue' : 'green'}">${guess.bulls}</span></span>
+                        <span>Cows: <span class="${end ? 'purple' : 'orange'}">${guess.cows}</span></span>
+                            </div>
+                        </div>
+        </div>
+    `;
+    });
+    historyContent.innerHTML = guessesHTML;
 
-        return `
-            <div class="history-row">
-                <span class="guess-number">${index + 1}</span>
-                <div class="guess-content">
-                    <span class="guess-value">${guessValue}</span>
-                    <div class="guess-result">
-                        <span>Bulls: <span class="green">${guess.bulls}</span></span>
-                        <span>Cows: <span class="orange">${guess.cows}</span></span>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-
-    historyContent.innerHTML = historyHTML;
-
-    // Smooth scroll to bottom with mobile support
+    // Scroll guess history to bottom with a small delay to ensure content is rendered
     setTimeout(() => {
         historyContent.scrollTo({
             top: historyContent.scrollHeight,
@@ -326,8 +326,8 @@ function updateCurrentGuessDisplay() {
                             <span>Cows: <span class="orange">?</span></span>
                         </div>
                     </div>
-                </div>
-            `;
+            </div>
+        `;
             document.getElementById('keyboard-result').innerHTML = resultHTML;
         }
     } else {
@@ -477,10 +477,28 @@ function generateDailyNumber(digits, repeatable) {
 }
 
 function checkDayChange() {
-    const currentDate = new Date().getUTCDate();
-    if (lastCheckedDate !== currentDate && isNumberOfDay) {
+    const currentDate = new Date().toISOString().split('T')[0];
+    if (lastCheckedDate !== currentDate) {
         lastCheckedDate = currentDate;
+        
+        // If in daily mode, show alert and regenerate
+        if (isNumberOfDay) {
+            // Get current settings
+            const gameMode = document.getElementById('game-mode').value;
+            const secretType = document.getElementById('secret-type').value;
+            const lengthText = gameLength === 4 ? "4-digit" : "5-digit";
+            const typeText = secretType === 'repeatable' ? "Repeatable" : "Non-Repeatable";
+            
+            alert(`UTC Date changed! Generating new Today's ${typeText} ${lengthText} Secret...`);
         startNewGame();
+        }
+
+        // Generate and log all Today's combinations
+        console.log("Today's Combinations (UTC):", currentDate);
+        console.log("4-digit Non-Repeatable:", generateDailyNumber(4, false));
+        console.log("4-digit Repeatable:", generateDailyNumber(4, true));
+        console.log("5-digit Non-Repeatable:", generateDailyNumber(5, false));
+        console.log("5-digit Repeatable:", generateDailyNumber(5, true));
     }
 }
 
@@ -500,10 +518,19 @@ function updateUTCTime() {
     document.getElementById('utc-time').textContent = formattedTime;
 }
 
-// Update the window.onload function with a longer delay
+// Update the window.onload function
 window.onload = function () {
-    // Initialize the game
-    lastCheckedDate = new Date().getUTCDate();
+    // Initialize with current UTC date
+    lastCheckedDate = new Date().toISOString().split('T')[0];
+    
+    // Generate initial combinations
+    console.log("Today's Combinations (UTC):", lastCheckedDate);
+    console.log("4-digit Non-Repeatable:", generateDailyNumber(4, false));
+    console.log("4-digit Repeatable:", generateDailyNumber(4, true));
+    console.log("5-digit Non-Repeatable:", generateDailyNumber(5, false));
+    console.log("5-digit Repeatable:", generateDailyNumber(5, true));
+    
+    // Start the game
     startNewGame();
     
     // Initial UTC time update
@@ -537,16 +564,23 @@ function confirmNewGame() {
 }
 
 function toggleDailyNumber() {
+    const modeSelect = document.getElementById('game-mode');
+    const newMode = modeSelect.value === 'daily';
+    
+    // If mode hasn't actually changed, do nothing
+    if (newMode === isNumberOfDay) {
+        return;
+    }
+
     // Skip confirmation if game is over or no attempts made
     if (attempts > 0 && !end) {
-        if (!confirm('Changing to daily number will start a new game. Current progress will be lost. Continue?')) {
-            // If user cancels, revert the checkbox to current isNumberOfDay state
-            document.getElementById('number-of-day').checked = isNumberOfDay;
+        if (!confirm('Changing game mode will start a new game. Current progress will be lost. Continue?')) {
+            // If user cancels, revert the select to current mode
+            modeSelect.value = isNumberOfDay ? 'daily' : 'normal';
             return;
         }
     }
-    const dailyCheckbox = document.getElementById('number-of-day');
-    isNumberOfDay = dailyCheckbox.checked;
+    isNumberOfDay = newMode;
     startNewGame();
 }
 
@@ -584,17 +618,26 @@ function enableKeyboard() {
 }
 
 function switchTab(tabName) {
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    tabButtons.forEach(button => {
-        button.classList.remove('active');
-        if (button.textContent.toLowerCase().includes(tabName)) {
-            button.classList.add('active');
-        }
-    });
-
-    const tabPanels = document.querySelectorAll('.tab-panel');
-    tabPanels.forEach(panel => {
-        panel.classList.remove('active');
-    });
+    // Remove active class from all tabs and panels
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+    
+    // Add active class to selected tab and panel
+    document.querySelector(`.tab-btn[onclick*="${tabName}"]`).classList.add('active');
     document.getElementById(`${tabName}-tab`).classList.add('active');
+}
+
+// Add this function to format guesses with colors when game ends
+function formatGuessWithColors(guessObj) {
+    let formattedGuess = '';
+    for (let i = 0; i < guessObj.guess.length; i++) {
+        if (guessObj.guess[i] === secretCode[i]) {
+            formattedGuess += `<span class="blue">${guessObj.guess[i]}</span>`;
+        } else if (secretCode.includes(guessObj.guess[i])) {
+            formattedGuess += `<span class="purple">${guessObj.guess[i]}</span>`;
+        } else {
+            formattedGuess += guessObj.guess[i];
+        }
+    }
+    return formattedGuess;
 }
