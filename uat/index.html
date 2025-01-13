@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="CowBull - A number guessing game">
+    <title>CowBull</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <div id="container" role="main">
+        <header id="header" role="banner">
+            <h1 id="game-title">
+                <span style="color: purple;">Cow</span><span style="color: blue;">Bull</span>
+            </h1>
+            <div id="utc-time" class="utc-time-display" aria-live="polite"></div>
+        </header>
+
+        <div id="game-container">
+            <!-- Options Section -->
+            <section id="options">
+                <div class="options-sentence">
+                    <span>Crack the</span>
+                    <select id="game-mode" onchange="toggleDailyNumber()">
+                        <option value="normal">Normal</option>
+                        <option value="daily">Today's</option>
+                    </select>
+                    <select id="secret-type" onchange="toggleSecretType()">
+                        <option value="non-repeatable">Non-Repeat</option>
+                        <option value="repeatable">Repeatable</option>
+                    </select>
+                    <span>-</span>
+                    <select id="game-length" onchange="handleGameLengthChange(this.value)">
+                        <option value="4">4-digit</option>
+                        <option value="5">5-digit</option>
+                    </select>
+                    <span>secret!</span>
+                </div>
+            </section>
+
+            <!-- Game Content -->
+            <div class="game-content">
+                <!-- Tabs Container -->
+                <div class="tabs-container">
+                    <!-- Tab Buttons -->
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" onclick="switchTab('examples')">Examples</button>
+                        <button class="tab-btn" onclick="switchTab('history')">Guess History</button>
+                        </div>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content">
+                        <!-- Examples Tab -->
+                        <div id="examples-tab" class="tab-panel active">
+                            <div class="example-section">
+                                <div class="example-guess">
+                                    <span>Secret: 1234</span>
+                                    <span>Guess: 5<span style="color: blue">2</span><span style="color: purple">4</span><span style="color: purple">1</span></span>
+                                    <span class="example-result">→ <span style="color: blue">1</span> Bulls, <span style="color: purple">2</span> Cows</span>
+                                </div>
+                                <div class="example-explanation">
+                                    <div>• <span style="color: blue">Blue</span>: correct position (2)</div>
+                                    <div>• <span style="color: purple">Purple</span>: wrong position (1,4)</div>
+                                    <div>• <span class="unmatched">Plain</span>: not in code (5)</div>
+                                </div>
+                                <div class="example-guess">
+                                    <span>Secret: 12345</span>
+                                    <span>Guess: 6<span style="color: blue">2</span><span style="color: purple">4</span>7<span style="color: blue">5</span></span>
+                                    <span class="example-result">→ <span style="color: blue">2</span> Bulls, <span style="color: purple">1</span> Cow</span>
+                                </div>
+                                <div class="example-explanation">
+                                    <div>• <span style="color: blue">Blue</span>: correct position (2,5)</div>
+                                    <div>• <span style="color: purple">Purple</span>: wrong position (4)</div>
+                                    <div>• <span class="unmatched">Plain</span>: not in code (6,7)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- History Tab -->
+                        <div id="history-tab" class="tab-panel">
+                        <div class="history-content">
+                            <!-- Guess history content will be injected here -->
+                        </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- Result section -->
+                    <div id="result" aria-live="polite" role="status"></div>
+
+                <!-- Virtual Keyboard -->
+                <div id="virtual-keyboard" role="group" aria-label="Virtual keyboard" class="virtual-keyboard">
+                    <div class="keyboard-row result-row">
+                        <div id="keyboard-result"></div>
+                    </div>
+                    <div class="keyboard-row attempts-row">
+                        <div class="attempts-info">12 attempts remaining</div>
+                    </div>
+                        <div class="keyboard-row">
+                            <button class="key-btn" data-key="1" aria-label="Number 1">1</button>
+                            <button class="key-btn" data-key="2" aria-label="Number 2">2</button>
+                            <button class="key-btn" data-key="3" aria-label="Number 3">3</button>
+                            <button class="key-btn" data-key="4" aria-label="Number 4">4</button>
+                            <button class="key-btn" data-key="5" aria-label="Number 5">5</button>
+                        </div>
+                        <div class="keyboard-row">
+                            <button class="key-btn" data-key="6" aria-label="Number 6">6</button>
+                            <button class="key-btn" data-key="7" aria-label="Number 7">7</button>
+                            <button class="key-btn" data-key="8" aria-label="Number 8">8</button>
+                            <button class="key-btn" data-key="9" aria-label="Number 9">9</button>
+                            <button class="key-btn" data-key="0" aria-label="Number 0">0</button>
+                        </div>
+                        <div class="keyboard-row">
+                        <button class="key-btn wide-btn" data-action="new-game" onclick="confirmNewGame()" aria-label="New">New</button>
+                        <button class="key-btn wide-btn" data-action="clear" aria-label="Clear input">Clear</button>
+                            <button class="key-btn wide-btn" data-action="backspace" aria-label="Backspace">⌫</button>
+                            <button class="key-btn wide-btn" data-action="enter" aria-label="Enter guess">Guess</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
