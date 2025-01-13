@@ -280,15 +280,23 @@ function updateGuessHistory() {
     const scrollToBottom = () => {
         const historyTab = document.querySelector('#history-tab .history-content');
         if (historyTab) {
-            const scrollHeight = historyTab.scrollHeight;
-            historyTab.scrollTop = scrollHeight;
+            // For iOS devices
+            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                historyTab.scrollTop = historyTab.scrollHeight;
+            } else {
+                // For other devices
+                requestAnimationFrame(() => {
+                    historyTab.scrollTop = historyTab.scrollHeight;
+                });
+            }
         }
     };
 
-    // Execute scroll multiple times to ensure it works
+    // Execute scroll multiple times to ensure it works across devices
     scrollToBottom();
     setTimeout(scrollToBottom, 50);
     setTimeout(scrollToBottom, 150);
+    setTimeout(scrollToBottom, 300); // Extra delay for slower devices
 }
 
 function appendNumber(num) {
@@ -640,15 +648,23 @@ function switchTab(tabName) {
         const scrollToBottom = () => {
             const historyContent = document.querySelector('#history-tab .history-content');
             if (historyContent) {
-                const scrollHeight = historyContent.scrollHeight;
-                historyContent.scrollTop = scrollHeight;
+                // For iOS devices
+                if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                    historyContent.scrollTop = historyContent.scrollHeight;
+                } else {
+                    // For other devices
+                    requestAnimationFrame(() => {
+                        historyContent.scrollTop = historyContent.scrollHeight;
+                    });
+                }
             }
         };
 
-        // Execute scroll multiple times to ensure it works
+        // Execute scroll multiple times to ensure it works across devices
         scrollToBottom();
         setTimeout(scrollToBottom, 50);
         setTimeout(scrollToBottom, 150);
+        setTimeout(scrollToBottom, 300); // Extra delay for slower devices
     }
 }
 
